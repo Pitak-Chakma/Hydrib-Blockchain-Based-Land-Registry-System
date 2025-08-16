@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="gradient-bg text-white py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center animate-fade-in">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                Secure Land Registry for
+                <span class="text-bangladesh-gold">Bangladesh</span>
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 text-gray-200 max-w-3xl mx-auto">
+                A revolutionary blockchain-based system ensuring transparent, secure, and efficient land registration with reduced fraud and enhanced trust.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                {% if not session.user_id %}
+                    <a href="{{ url_for('register') }}" class="bg-bangladesh-gold hover:bg-yellow-500 text-bangladesh-green px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105">
+                        Get Started
+                    </a>
+                    <a href="{{ url_for('login') }}" class="border-2 border-white text-white hover:bg-white hover:text-bangladesh-green px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300">
+                        Login
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('dashboard') }}" class="bg-bangladesh-gold hover:bg-yellow-500 text-bangladesh-green px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105">
+                        Go to Dashboard
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16 animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Revolutionary Features
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Our hybrid blockchain system combines the best of public transparency and private security
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="bg-light-green p-8 rounded-xl card-hover">
+                <div class="w-16 h-16 bg-bangladesh-green rounded-full flex items-center justify-center mb-6">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-bangladesh-green mb-4">Blockchain Security</h3>
+                <p class="text-gray-700">Tamper-proof land records using hybrid blockchain technology ensuring maximum security and transparency.</p>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="bg-light-green p-8 rounded-xl card-hover">
+                <div class="w-16 h-16 bg-bangladesh-green rounded-full flex items-center justify-center mb-6">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-bangladesh-green mb-4">Role-Based Access</h3>
+                <p class="text-gray-700">Controlled access for government officials, landowners, and buyers with appropriate permissions.</p>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="bg-light-green p-8 rounded-xl card-hover">
+                <div class="w-16 h-16 bg-bangladesh-green rounded-full flex items-center justify-center mb-6">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-bangladesh-green mb-4">Smart Contracts</h3>
+                <p class="text-gray-700">Automated verification and approval processes reducing manual errors and transaction delays.</p>
+            </div>
+            
+            <!-- Feature 4 -->
+            <div class="bg-light-green p-8 rounded-xl card-hover">
+                <div class="w-16 h-16 bg-bangladesh-green rounded-full flex items-center justify-center mb-6">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-bangladesh-green mb-4">Document Verification</h3>
+                <p class="text-gray-700">Secure off-chain document storage with on-chain hash verification ensuring data integrity.</p>
+            </div>
+            
+            <!-- Feature 5 -->
+            <div class="bg-light-green p-8 rounded-xl card-hover">
+                <div class="w-16 h-16 bg-bangladesh-green rounded-full flex items-center justify-center mb-6">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-bangladesh-green mb-4">Consensus Mechanism</h3>
+                <p class="text-gray-700">Trust-based consensus with government oversight ensuring fast and secure transactions.</p>
+            </div>
+            
+            <!-- Feature 6 -->
+            <div class="bg-light-green p-8 rounded-xl card-hover">
+                <div class="w-16 h-16 bg-bangladesh-green rounded-full flex items-center justify-center mb-6">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-bangladesh-green mb-4">Transparent Ledger</h3>
+                <p class="text-gray-700">Immutable and transparent transaction records reducing disputes and corruption.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Objectives Section -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                System Objectives
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Our mission to transform land registration in Bangladesh
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="space-y-8">
+                <div class="flex items-start space-x-4">
+                    <div class="w-8 h-8 bg-bangladesh-red rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <span class="text-white font-bold text-sm">1</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Reduce Fraud & Corruption</h3>
+                        <p class="text-gray-600">Eliminate fraudulent land transactions through immutable blockchain records and transparent processes.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start space-x-4">
+                    <div class="w-8 h-8 bg-bangladesh-red rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <span class="text-white font-bold text-sm">2</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Enhance Trust</h3>
+                        <p class="text-gray-600">Build public confidence through transparent, verifiable, and tamper-proof land records.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start space-x-4">
+                    <div class="w-8 h-8 bg-bangladesh-red rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <span class="text-white font-bold text-sm">3</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Improve Efficiency</h3>
+                        <p class="text-gray-600">Streamline registration processes with automated smart contracts and digital workflows.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start space-x-4">
+                    <div class="w-8 h-8 bg-bangladesh-red rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <span class="text-white font-bold text-sm">4</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Ensure Security</h3>
+                        <p class="text-gray-600">Protect sensitive data with hybrid blockchain architecture and cryptographic security.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-8 rounded-2xl shadow-xl">
+                <h3 class="text-2xl font-bold text-bangladesh-green mb-6 text-center">System Benefits</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700">99.9% Fraud Reduction</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700">80% Faster Processing</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700">100% Transparency</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700">24/7 Availability</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700">Immutable Records</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="gradient-bg text-white py-16">
+    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">
+            Ready to Transform Land Registration?
+        </h2>
+        <p class="text-xl mb-8 text-gray-200">
+            Join the future of secure, transparent, and efficient land management in Bangladesh.
+        </p>
+        {% if not session.user_id %}
+            <a href="{{ url_for('register') }}" class="bg-bangladesh-gold hover:bg-yellow-500 text-bangladesh-green px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105 inline-block">
+                Start Your Journey
+            </a>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

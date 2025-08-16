@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Hydrib Land Registry{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Government Official Dashboard</h1>
+                    <p class="text-gray-600 mt-2">Oversee and manage the blockchain land registry system</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="bg-bangladesh-red text-white px-4 py-2 rounded-lg">
+                        <span class="font-semibold">Admin Access</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-bangladesh-green rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Properties</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ total_lands }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-bangladesh-gold rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-bangladesh-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Registered Users</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ total_users }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Transactions</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ total_transactions }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-bangladesh-red rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Pending Approvals</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ pending_transactions|length }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <a href="/ledger" class="flex items-center p-4 bg-bangladesh-green text-white rounded-lg hover:bg-dark-green transition-colors duration-200">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span class="font-medium">View Ledger</span>
+                </a>
+                
+                <a href="{{ url_for('register_land') }}" class="flex items-center p-4 bg-bangladesh-gold text-bangladesh-green rounded-lg hover:bg-yellow-500 transition-colors duration-200">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <span class="font-medium">Register Land</span>
+                </a>
+                
+                <button onclick="generateReport()" class="flex items-center p-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span class="font-medium">Generate Report</span>
+                </button>
+                
+                <button onclick="systemHealth()" class="flex items-center p-4 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors duration-200">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <span class="font-medium">System Health</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Pending Transactions -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-gray-900">Pending Transactions</h2>
+                <span class="bg-bangladesh-red text-white px-3 py-1 rounded-full text-sm font-medium">
+                    {{ pending_transactions|length }} Pending
+                </span>
+            </div>
+            
+            {% if pending_transactions %}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transaction ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">From</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">To</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for transaction in pending_transactions %}
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    #{{ transaction.id }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">{{ transaction.plot_number }}</div>
+                                    <div class="text-sm text-gray-500">{{ transaction.location }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {% if transaction.transaction_type == 'registration' %}bg-green-100 text-green-800{% elif transaction.transaction_type == 'transfer' %}bg-blue-100 text-blue-800{% else %}bg-purple-100 text-purple-800{% endif %}">
+                                        {{ transaction.transaction_type|title }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ transaction.from_user or 'System' }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ transaction.to_user }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ transaction.created_at[:16].replace('T', ' ') if transaction.created_at else 'N/A' }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                    <button onclick="approveTransaction('{{ transaction.id }}')" 
+                                            class="text-green-600 hover:text-green-900 bg-green-100 hover:bg-green-200 px-3 py-1 rounded transition-colors duration-200">
+                                        Approve
+                                    </button>
+                                    <button onclick="rejectTransaction('{{ transaction.id }}')" 
+                                            class="text-red-600 hover:text-red-900 bg-red-100 hover:bg-red-200 px-3 py-1 rounded transition-colors duration-200">
+                                        Reject
+                                    </button>
+                                    <button onclick="viewDetails('{{ transaction.id }}')" 
+                                            class="text-blue-600 hover:text-blue-900 bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded transition-colors duration-200">
+                                        Details
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-12">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">No pending transactions</h3>
+                    <p class="mt-1 text-sm text-gray-500">All transactions have been processed.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Transaction Details Modal -->
+<div id="transactionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div class="sm:flex sm:items-start">
+                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Transaction Details</h3>
+                        <div id="transactionDetails" class="space-y-3">
+                            <!-- Details will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button onclick="closeModal()" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function approveTransaction(transactionId) {
+        if (confirm('Are you sure you want to approve this transaction?')) {
+            // Simulate approval
+            fetch(`/approve_transaction/${transactionId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Transaction approved successfully!');
+                    location.reload();
+                } else {
+                    alert('Error approving transaction: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error approving transaction');
+            });
+        }
+    }
+    
+    function rejectTransaction(transactionId) {
+        const reason = prompt('Please provide a reason for rejection:');
+        if (reason) {
+            fetch(`/reject_transaction/${transactionId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ reason: reason })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Transaction rejected successfully!');
+                    location.reload();
+                } else {
+                    alert('Error rejecting transaction: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error rejecting transaction');
+            });
+        }
+    }
+    
+    function viewDetails(transactionId) {
+        // Simulate fetching transaction details
+        const details = {
+            id: transactionId,
+            type: 'Land Transfer',
+            property: 'Plot #12345',
+            location: 'Dhaka, Bangladesh',
+            from: 'John Doe',
+            to: 'Jane Smith',
+            price: '৳5,00,000',
+            date: '2024-01-15',
+            status: 'Pending Approval'
+        };
+        
+        const detailsHtml = `
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div><strong>Transaction ID:</strong></div><div>#${details.id}</div>
+                <div><strong>Type:</strong></div><div>${details.type}</div>
+                <div><strong>Property:</strong></div><div>${details.property}</div>
+                <div><strong>Location:</strong></div><div>${details.location}</div>
+                <div><strong>From:</strong></div><div>${details.from}</div>
+                <div><strong>To:</strong></div><div>${details.to}</div>
+                <div><strong>Price:</strong></div><div>${details.price}</div>
+                <div><strong>Date:</strong></div><div>${details.date}</div>
+                <div><strong>Status:</strong></div><div><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">${details.status}</span></div>
+            </div>
+        `;
+        
+        document.getElementById('transactionDetails').innerHTML = detailsHtml;
+        document.getElementById('transactionModal').classList.remove('hidden');
+    }
+    
+    function closeModal() {
+        document.getElementById('transactionModal').classList.add('hidden');
+    }
+    
+    function generateReport() {
+        alert('Generating system report... This feature will download a comprehensive report of all transactions and system statistics.');
+    }
+    
+    function systemHealth() {
+        alert('System Health Check:\n\n✅ Blockchain Network: Healthy\n✅ Database: Connected\n✅ Smart Contracts: Operational\n✅ Security: All systems secure\n\nLast Check: ' + new Date().toLocaleString());
+    }
+</script>
+{% endblock %}

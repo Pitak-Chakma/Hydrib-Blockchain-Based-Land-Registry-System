@@ -1,0 +1,534 @@
+{% extends "base.html" %}
+
+{% block title %}Buyer Dashboard - Hydrib Land Registry{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Buyer Dashboard</h1>
+                    <p class="text-gray-600 mt-2">Discover and purchase verified properties</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="bg-blue-500 text-white px-4 py-2 rounded-lg">
+                        <span class="font-semibold">Property Buyer</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-xl font-bold text-gray-900 mb-4">Search Properties</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                    <select id="locationFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-bangladesh-green">
+                        <option value="">All Locations</option>
+                        <option value="dhaka">Dhaka</option>
+                        <option value="chittagong">Chittagong</option>
+                        <option value="sylhet">Sylhet</option>
+                        <option value="rajshahi">Rajshahi</option>
+                        <option value="khulna">Khulna</option>
+                        <option value="barisal">Barisal</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Property Type</label>
+                    <select id="typeFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-bangladesh-green">
+                        <option value="">All Types</option>
+                        <option value="residential">Residential</option>
+                        <option value="commercial">Commercial</option>
+                        <option value="agricultural">Agricultural</option>
+                        <option value="industrial">Industrial</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Price Range (BDT)</label>
+                    <select id="priceFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-bangladesh-green">
+                        <option value="">Any Price</option>
+                        <option value="0-1000000">Under ৳10 Lakh</option>
+                        <option value="1000000-5000000">৳10L - ৳50L</option>
+                        <option value="5000000-10000000">৳50L - ৳1 Crore</option>
+                        <option value="10000000-99999999">Above ৳1 Crore</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Area (acres)</label>
+                    <select id="areaFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-bangladesh-green">
+                        <option value="">Any Size</option>
+                        <option value="0-1">Under 1 acre</option>
+                        <option value="1-5">1-5 acres</option>
+                        <option value="5-10">5-10 acres</option>
+                        <option value="10-999">Above 10 acres</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="mt-4 flex space-x-4">
+                <button onclick="searchProperties()" class="bg-bangladesh-green text-white px-6 py-2 rounded-lg hover:bg-dark-green transition-colors duration-200">
+                    <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    Search Properties
+                </button>
+                <button onclick="clearFilters()" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors duration-200">
+                    Clear Filters
+                </button>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Available Properties</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ available_properties|length }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">My Purchases</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ my_purchases|length }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Pending Transactions</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ pending_transactions|length }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Saved Properties</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ saved_properties|length }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <button onclick="searchProperties()" class="flex items-center p-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <span class="font-medium">Search Properties</span>
+                </button>
+                
+                <a href="/ledger" class="flex items-center p-4 bg-bangladesh-green text-white rounded-lg hover:bg-dark-green transition-colors duration-200">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span class="font-medium">View Ledger</span>
+                </a>
+                
+                <button onclick="viewMyTransactions()" class="flex items-center p-4 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors duration-200">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                    </svg>
+                    <span class="font-medium">My Transactions</span>
+                </button>
+                
+                <button onclick="viewSavedProperties()" class="flex items-center p-4 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors duration-200">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                    </svg>
+                    <span class="font-medium">Saved Properties</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Available Properties -->
+            <div class="lg:col-span-2 bg-white rounded-lg shadow-lg p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold text-gray-900">Available Properties</h2>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="toggleView('grid')" id="gridViewBtn" class="p-2 bg-bangladesh-green text-white rounded">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                            </svg>
+                        </button>
+                        <button onclick="toggleView('list')" id="listViewBtn" class="p-2 bg-gray-300 text-gray-700 rounded">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="propertiesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Sample Properties -->
+                    <div class="property-card border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200">
+                        <div class="h-48 bg-gradient-to-br from-bangladesh-green to-dark-green flex items-center justify-center">
+                            <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            </svg>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="font-semibold text-gray-900">Plot #DHAKA-001</h3>
+                                <button onclick="saveProperty('DHAKA-001')" class="text-yellow-500 hover:text-yellow-600">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-2">
+                                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                Dhanmondi, Dhaka
+                            </p>
+                            <p class="text-gray-600 text-sm mb-2">
+                                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+                                </svg>
+                                2.5 acres • Residential
+                            </p>
+                            <p class="text-2xl font-bold text-bangladesh-green mb-3">৳45,00,000</p>
+                            <div class="flex space-x-2">
+                                <button onclick="viewPropertyDetails('DHAKA-001')" class="flex-1 bg-blue-500 text-white py-2 px-3 rounded text-sm hover:bg-blue-600 transition-colors duration-200">
+                                    View Details
+                                </button>
+                                <button onclick="initiatePurchase('DHAKA-001')" class="flex-1 bg-bangladesh-green text-white py-2 px-3 rounded text-sm hover:bg-dark-green transition-colors duration-200">
+                                    Buy Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="property-card border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200">
+                        <div class="h-48 bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+                            <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="font-semibold text-gray-900">Plot #CTG-002</h3>
+                                <button onclick="saveProperty('CTG-002')" class="text-yellow-500 hover:text-yellow-600">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-2">
+                                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                Agrabad, Chittagong
+                            </p>
+                            <p class="text-gray-600 text-sm mb-2">
+                                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+                                </svg>
+                                1.8 acres • Commercial
+                            </p>
+                            <p class="text-2xl font-bold text-bangladesh-green mb-3">৳75,00,000</p>
+                            <div class="flex space-x-2">
+                                <button onclick="viewPropertyDetails('CTG-002')" class="flex-1 bg-blue-500 text-white py-2 px-3 rounded text-sm hover:bg-blue-600 transition-colors duration-200">
+                                    View Details
+                                </button>
+                                <button onclick="initiatePurchase('CTG-002')" class="flex-1 bg-bangladesh-green text-white py-2 px-3 rounded text-sm hover:bg-dark-green transition-colors duration-200">
+                                    Buy Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 text-center">
+                    <button onclick="loadMoreProperties()" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors duration-200">
+                        Load More Properties
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-6">
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Recent Activity</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900">Purchase Approved</p>
+                                <p class="text-xs text-gray-500">Plot #DHAKA-003 • 2 hours ago</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900">Property Viewed</p>
+                                <p class="text-xs text-gray-500">Plot #SYL-001 • 5 hours ago</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900">Property Saved</p>
+                                <p class="text-xs text-gray-500">Plot #RAJ-004 • 1 day ago</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Market Insights -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Market Insights</h3>
+                    <div class="space-y-4">
+                        <div class="bg-green-50 p-3 rounded-lg">
+                            <p class="text-sm font-medium text-green-800">Average Price</p>
+                            <p class="text-lg font-bold text-green-900">৳52,50,000</p>
+                            <p class="text-xs text-green-600">+5.2% from last month</p>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <p class="text-sm font-medium text-blue-800">Properties Listed</p>
+                            <p class="text-lg font-bold text-blue-900">1,247</p>
+                            <p class="text-xs text-blue-600">+12 new this week</p>
+                        </div>
+                        
+                        <div class="bg-purple-50 p-3 rounded-lg">
+                            <p class="text-sm font-medium text-purple-800">Avg. Transaction Time</p>
+                            <p class="text-lg font-bold text-purple-900">3.2 days</p>
+                            <p class="text-xs text-purple-600">-1.5 days improvement</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Property Details Modal -->
+<div id="propertyModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div class="sm:flex sm:items-start">
+                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Property Details</h3>
+                        <div id="propertyDetails" class="space-y-3">
+                            <!-- Details will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button onclick="closePropertyModal()" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    Close
+                </button>
+                <button onclick="initiatePurchaseFromModal()" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-bangladesh-green text-base font-medium text-white hover:bg-dark-green focus:outline-none sm:w-auto sm:text-sm">
+                    Purchase Property
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentView = 'grid';
+    let currentPropertyId = null;
+    
+    function searchProperties() {
+        const location = document.getElementById('locationFilter').value;
+        const type = document.getElementById('typeFilter').value;
+        const price = document.getElementById('priceFilter').value;
+        const area = document.getElementById('areaFilter').value;
+        
+        alert(`Searching properties with filters:\n\nLocation: ${location || 'Any'}\nType: ${type || 'Any'}\nPrice: ${price || 'Any'}\nArea: ${area || 'Any'}\n\nThis will filter the available properties based on your criteria.`);
+    }
+    
+    function clearFilters() {
+        document.getElementById('locationFilter').value = '';
+        document.getElementById('typeFilter').value = '';
+        document.getElementById('priceFilter').value = '';
+        document.getElementById('areaFilter').value = '';
+        alert('All filters have been cleared. Showing all available properties.');
+    }
+    
+    function toggleView(view) {
+        currentView = view;
+        const container = document.getElementById('propertiesContainer');
+        const gridBtn = document.getElementById('gridViewBtn');
+        const listBtn = document.getElementById('listViewBtn');
+        
+        if (view === 'grid') {
+            container.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';
+            gridBtn.className = 'p-2 bg-bangladesh-green text-white rounded';
+            listBtn.className = 'p-2 bg-gray-300 text-gray-700 rounded';
+        } else {
+            container.className = 'space-y-4';
+            gridBtn.className = 'p-2 bg-gray-300 text-gray-700 rounded';
+            listBtn.className = 'p-2 bg-bangladesh-green text-white rounded';
+        }
+    }
+    
+    function viewPropertyDetails(propertyId) {
+        currentPropertyId = propertyId;
+        
+        // Simulate fetching property details
+        const details = {
+            'DHAKA-001': {
+                plotNumber: 'DHAKA-001',
+                location: 'Dhanmondi, Dhaka',
+                area: '2.5 acres',
+                type: 'Residential',
+                price: '৳45,00,000',
+                owner: 'Ahmed Rahman',
+                registrationDate: '2024-01-15',
+                description: 'Prime residential plot in the heart of Dhanmondi. Perfect for building a family home or investment property.',
+                features: ['Electricity Connection', 'Water Supply', 'Road Access', 'Clear Title'],
+                documentHash: 'abc123def456...',
+                blockchainHash: 'xyz789uvw012...'
+            },
+            'CTG-002': {
+                plotNumber: 'CTG-002',
+                location: 'Agrabad, Chittagong',
+                area: '1.8 acres',
+                type: 'Commercial',
+                price: '৳75,00,000',
+                owner: 'Fatima Khatun',
+                registrationDate: '2024-02-10',
+                description: 'Excellent commercial plot in Agrabad commercial area. High potential for business development.',
+                features: ['Commercial Zone', 'High Traffic Area', 'Utilities Available', 'Investment Grade'],
+                documentHash: 'def456ghi789...',
+                blockchainHash: 'uvw012xyz345...'
+            }
+        };
+        
+        const property = details[propertyId] || details['DHAKA-001'];
+        
+        const detailsHtml = `
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-3 text-sm">
+                    <div><strong>Plot Number:</strong></div><div>${property.plotNumber}</div>
+                    <div><strong>Location:</strong></div><div>${property.location}</div>
+                    <div><strong>Area:</strong></div><div>${property.area}</div>
+                    <div><strong>Type:</strong></div><div>${property.type}</div>
+                    <div><strong>Price:</strong></div><div class="text-lg font-bold text-bangladesh-green">${property.price}</div>
+                    <div><strong>Current Owner:</strong></div><div>${property.owner}</div>
+                    <div><strong>Registration Date:</strong></div><div>${property.registrationDate}</div>
+                </div>
+                
+                <div>
+                    <strong>Description:</strong>
+                    <p class="text-gray-600 mt-1">${property.description}</p>
+                </div>
+                
+                <div>
+                    <strong>Features:</strong>
+                    <ul class="list-disc list-inside text-gray-600 mt-1">
+                        ${property.features.map(feature => `<li>${feature}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded">
+                    <div class="text-xs space-y-1">
+                        <div><strong>Document Hash:</strong> <span class="font-mono">${property.documentHash}</span></div>
+                        <div><strong>Blockchain Hash:</strong> <span class="font-mono">${property.blockchainHash}</span></div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('propertyDetails').innerHTML = detailsHtml;
+        document.getElementById('propertyModal').classList.remove('hidden');
+    }
+    
+    function closePropertyModal() {
+        document.getElementById('propertyModal').classList.add('hidden');
+        currentPropertyId = null;
+    }
+    
+    function initiatePurchase(propertyId) {
+        const confirmation = confirm(`Are you sure you want to purchase Property ${propertyId}?\n\nThis will initiate a smart contract transaction that will:\n• Verify your identity and funds\n• Check property ownership\n• Submit for government approval\n• Execute transfer upon approval`);
+        
+        if (confirmation) {
+            alert(`Purchase initiated for Property ${propertyId}!\n\nTransaction Status: Pending\nSmart Contract: Activated\nNext Step: Awaiting government approval\n\nYou will receive notifications about the transaction progress.`);
+        }
+    }
+    
+    function initiatePurchaseFromModal() {
+        if (currentPropertyId) {
+            initiatePurchase(currentPropertyId);
+            closePropertyModal();
+        }
+    }
+    
+    function saveProperty(propertyId) {
+        alert(`Property ${propertyId} has been saved to your favorites!\n\nYou can view all saved properties from the Quick Actions menu.`);
+    }
+    
+    function loadMoreProperties() {
+        alert('Loading more properties...\n\nThis would fetch additional properties from the database and display them in the current view.');
+    }
+    
+    function viewMyTransactions() {
+        alert('My Transactions\n\nThis will show:\n• All your purchase attempts\n• Transaction status\n• Smart contract execution details\n• Payment information\n• Transfer completion status');
+    }
+    
+    function viewSavedProperties() {
+        alert('Saved Properties\n\nThis will display all properties you have saved for later viewing, with options to:\n• Remove from saved list\n• View details\n• Initiate purchase\n• Compare properties');
+    }
+</script>
+{% endblock %}

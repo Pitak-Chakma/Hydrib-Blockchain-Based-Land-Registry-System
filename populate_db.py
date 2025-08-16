@@ -27,55 +27,55 @@ def populate_sample_data():
     cursor.execute('DELETE FROM land_records')
     cursor.execute('DELETE FROM users')
     
-    # Sample users
+    # Sample users - including the required demo accounts
     users = [
         {
-            'email': 'admin@gov.bd',
+            'email': 'admin@hydrib.gov.bd',  # Required demo account
             'password': 'admin123',
             'role': 'admin',
-            'full_name': 'Government Administrator',
+            'full_name': 'Government Official',
             'phone': '+880-1711-123456'
+        },
+        {
+            'email': 'owner@example.com',  # Required demo account
+            'password': 'owner123',
+            'role': 'owner',
+            'full_name': 'Demo Landowner',
+            'phone': '+880-1712-234567'
+        },
+        {
+            'email': 'buyer@example.com',  # Required demo account
+            'password': 'buyer123',
+            'role': 'buyer',
+            'full_name': 'Demo Buyer',
+            'phone': '+880-1713-345678'
         },
         {
             'email': 'ahmed.rahman@email.com',
             'password': 'owner123',
             'role': 'owner',
             'full_name': 'Ahmed Rahman',
-            'phone': '+880-1712-234567'
+            'phone': '+880-1714-456789'
         },
         {
             'email': 'fatima.khatun@email.com',
             'password': 'owner123',
             'role': 'owner',
             'full_name': 'Fatima Khatun',
-            'phone': '+880-1713-345678'
+            'phone': '+880-1715-567890'
         },
         {
             'email': 'mohammad.islam@email.com',
             'password': 'owner123',
             'role': 'owner',
             'full_name': 'Mohammad Islam',
-            'phone': '+880-1714-456789'
+            'phone': '+880-1716-678901'
         },
         {
             'email': 'buyer1@email.com',
             'password': 'buyer123',
             'role': 'buyer',
             'full_name': 'Rashida Begum',
-            'phone': '+880-1715-567890'
-        },
-        {
-            'email': 'buyer2@email.com',
-            'password': 'buyer123',
-            'role': 'buyer',
-            'full_name': 'Karim Hassan',
-            'phone': '+880-1716-678901'
-        },
-        {
-            'email': 'buyer3@email.com',
-            'password': 'buyer123',
-            'role': 'buyer',
-            'full_name': 'Nasir Ahmed',
             'phone': '+880-1717-789012'
         }
     ]
@@ -96,7 +96,7 @@ def populate_sample_data():
             'plot_number': 'DHAKA-001',
             'location': 'Dhanmondi, Dhaka',
             'area': 2.5,
-            'owner_email': 'ahmed.rahman@email.com',
+            'owner_email': 'owner@example.com',  # Demo landowner
             'document_hash': calculate_hash('deed_dhaka_001_2024'),
             'status': 'active'
         },
@@ -104,7 +104,7 @@ def populate_sample_data():
             'plot_number': 'CTG-002',
             'location': 'Agrabad, Chittagong',
             'area': 1.8,
-            'owner_email': 'fatima.khatun@email.com',
+            'owner_email': 'owner@example.com',  # Demo landowner
             'document_hash': calculate_hash('deed_ctg_002_2024'),
             'status': 'active'
         },
@@ -112,7 +112,7 @@ def populate_sample_data():
             'plot_number': 'SYL-003',
             'location': 'Zindabazar, Sylhet',
             'area': 3.2,
-            'owner_email': 'mohammad.islam@email.com',
+            'owner_email': 'ahmed.rahman@email.com',
             'document_hash': calculate_hash('deed_syl_003_2024'),
             'status': 'active'
         },
@@ -157,7 +157,7 @@ def populate_sample_data():
         {
             'land_plot': 'DHAKA-001',
             'from_user': None,  # Registration transaction
-            'to_user': 'ahmed.rahman@email.com',
+            'to_user': 'owner@example.com',  # Demo landowner
             'transaction_type': 'registration',
             'price': None,
             'status': 'completed',
@@ -168,7 +168,7 @@ def populate_sample_data():
         {
             'land_plot': 'CTG-002',
             'from_user': None,
-            'to_user': 'fatima.khatun@email.com',
+            'to_user': 'owner@example.com',  # Demo landowner
             'transaction_type': 'registration',
             'price': None,
             'status': 'completed',
@@ -179,7 +179,7 @@ def populate_sample_data():
         {
             'land_plot': 'RAJ-005',
             'from_user': 'fatima.khatun@email.com',
-            'to_user': 'buyer1@email.com',
+            'to_user': 'buyer@example.com',  # Demo buyer
             'transaction_type': 'sale',
             'price': 8500000.00,  # 85 lakh BDT
             'status': 'pending',
@@ -189,8 +189,8 @@ def populate_sample_data():
         },
         {
             'land_plot': 'SYL-003',
-            'from_user': 'mohammad.islam@email.com',
-            'to_user': 'buyer2@email.com',
+            'from_user': 'ahmed.rahman@email.com',
+            'to_user': 'buyer@example.com',  # Demo buyer
             'transaction_type': 'sale',
             'price': 6200000.00,  # 62 lakh BDT
             'status': 'approved',
@@ -201,7 +201,7 @@ def populate_sample_data():
         {
             'land_plot': 'DHAKA-004',
             'from_user': 'ahmed.rahman@email.com',
-            'to_user': 'buyer3@email.com',
+            'to_user': 'buyer1@email.com',
             'transaction_type': 'sale',
             'price': 7800000.00,  # 78 lakh BDT
             'status': 'pending',
@@ -218,12 +218,22 @@ def populate_sample_data():
         to_user_id = user_ids[transaction['to_user']]
         
         to_user_email = [email for email, uid in user_ids.items() if uid == to_user_id][0] if to_user_id else 'unknown@example.com'
-        cursor.execute(
-            '''INSERT INTO transactions 
-               (property_id, seller_id, buyer_email, payment_method, sale_price, transfer_date, registration_fee, status) 
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
-            (land_id, from_user_id, to_user_email, 'cash', transaction['price'], '2024-01-01', 5000, transaction['status'])
-        )
+        
+        # Handle registration transactions differently (no sale price)
+        if transaction['transaction_type'] == 'registration':
+            cursor.execute(
+                '''INSERT INTO transactions 
+                   (property_id, seller_id, buyer_email, payment_method, sale_price, transfer_date, registration_fee, status) 
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
+                (land_id, from_user_id, to_user_email, 'registration', 0, '2024-01-01', 5000, transaction['status'])
+            )
+        else:
+            cursor.execute(
+                '''INSERT INTO transactions 
+                   (property_id, seller_id, buyer_email, payment_method, sale_price, transfer_date, registration_fee, status) 
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
+                (land_id, from_user_id, to_user_email, 'cash', transaction['price'], '2024-01-01', 5000, transaction['status'])
+            )
     
     # Sample blockchain entries
     blockchain_entries = [
@@ -244,9 +254,10 @@ def populate_sample_data():
     # Insert blockchain entries
     for i, entry in enumerate(blockchain_entries):
         block_hash = calculate_hash(f"{entry['transaction_data']}{entry['previous_hash']}{i}")
+        transaction_type = 'genesis' if i == 0 else 'registration'
         cursor.execute(
-            'INSERT INTO blockchain (block_hash, previous_hash, data) VALUES (?, ?, ?)',
-            (block_hash, entry['previous_hash'], entry['transaction_data'])
+            'INSERT INTO blockchain (block_hash, previous_hash, data, transaction_type) VALUES (?, ?, ?, ?)',
+            (block_hash, entry['previous_hash'], entry['transaction_data'], transaction_type)
         )
     
     conn.commit()
@@ -254,13 +265,14 @@ def populate_sample_data():
     
     print("Sample data populated successfully!")
     print("\nDemo Accounts:")
-    print("Government Official: admin@gov.bd / admin123")
+    print("Government Official: admin@hydrib.gov.bd / admin123")
+    print("Landowner: owner@example.com / owner123")
+    print("Buyer: buyer@example.com / buyer123")
+    print("\nAdditional accounts:")
     print("Landowner 1: ahmed.rahman@email.com / owner123")
     print("Landowner 2: fatima.khatun@email.com / owner123")
     print("Landowner 3: mohammad.islam@email.com / owner123")
     print("Buyer 1: buyer1@email.com / buyer123")
-    print("Buyer 2: buyer2@email.com / buyer123")
-    print("Buyer 3: buyer3@email.com / buyer123")
 
 if __name__ == '__main__':
     populate_sample_data()

@@ -69,6 +69,7 @@ def init_db():
             block_hash TEXT NOT NULL,
             previous_hash TEXT,
             data TEXT NOT NULL,
+            transaction_type TEXT,
             timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
@@ -1090,6 +1091,18 @@ def verify_document(document_id):
     finally:
         conn.close()
 
+@app.route('/get_pending_count')
+@login_required
+def get_pending_count():
+    try:
+        conn = get_db_connection()
+        pending_count = conn.execute('SELECT COUNT(*) as count FROM transactions WHERE status = "pending"').fetchone()['count']
+        return jsonify({'success': True, 'count': pending_count})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+    finally:
+        conn.close()
+
 @app.route('/ledger')
 def ledger():
     conn = get_db_connection()
@@ -1172,7 +1185,7 @@ def purchase_property(property_id):
             return jsonify({'success': False, 'message': 'Buyer not found'})
         
         # Create transaction record
-        conn.execute('''
+        cursor = conn.execute('''
             INSERT INTO transactions 
             (property_id, seller_id, buyer_email, buyer_phone, payment_method, sale_price, transfer_date, registration_fee, status)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -1188,7 +1201,7 @@ def purchase_property(property_id):
             'pending'
         ))
         
-        transaction_id = conn.lastrowid
+        transaction_id = cursor.lastrowid
         
         # Create blockchain entry for purchase initiation
         purchase_data = {

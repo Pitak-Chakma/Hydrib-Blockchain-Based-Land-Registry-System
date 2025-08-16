@@ -216,6 +216,53 @@
 </div>
 
 <script>
+    // Function to update pending transactions count
+    function updatePendingTransactionsCount() {
+        // Get the current count elements
+        const pendingCountElements = document.querySelectorAll('.bg-bangladesh-red.text-white.px-3.py-1.rounded-full.text-sm.font-medium');
+        const pendingStatsElement = document.querySelector('.text-sm.font-medium.text-gray-600:contains("Pending Approvals") + .text-2xl.font-bold');
+        
+        // Fetch the latest count from the server
+        fetch('/get_pending_count', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update the count in the header
+                pendingCountElements.forEach(element => {
+                    element.textContent = data.count + ' Pending';
+                });
+                
+                // Update the count in the stats card
+                const pendingApprovalElements = document.querySelectorAll('.text-sm.font-medium.text-gray-600');
+                pendingApprovalElements.forEach(element => {
+                    if (element.textContent.includes('Pending Approvals')) {
+                        const counterElement = element.nextElementSibling;
+                        if (counterElement && counterElement.classList.contains('text-2xl') && counterElement.classList.contains('font-bold')) {
+                            counterElement.textContent = data.count;
+                        }
+                    }
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error updating pending count:', error);
+        });
+    }
+    
+    // Check for updates every 30 seconds
+    setInterval(updatePendingTransactionsCount, 30000);
+    
+    // Function to manually update the pending count (can be called from other pages)
+    window.updateAdminDashboardCounts = function() {
+        updatePendingTransactionsCount();
+    };
+    
     function approveTransaction(transactionId) {
         if (confirm('Are you sure you want to approve this transaction?')) {
             console.log('Approving transaction:', transactionId);

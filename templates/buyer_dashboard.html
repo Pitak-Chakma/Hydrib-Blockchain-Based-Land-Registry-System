@@ -492,8 +492,48 @@
             .then(data => {
                 if (data.success) {
                     alert(`Purchase initiated successfully!\n\nTransaction ID: ${data.transaction_id}\nStatus: Pending Government Approval\n\nYou will receive notifications about the transaction progress.`);
-                    // Refresh the page to update the available properties
-                    location.reload();
+                    
+                    // Remove the property from available listings
+                    const propertyCard = button.closest('.property-card');
+                    if (propertyCard) {
+                        propertyCard.remove();
+                    }
+                    
+                    // Update pending transactions counter
+                    const pendingTransactionsElements = document.querySelectorAll('.text-sm.font-medium.text-gray-600');
+                    pendingTransactionsElements.forEach(element => {
+                        if (element.textContent.includes('Pending Transactions')) {
+                            const counterElement = element.nextElementSibling;
+                            if (counterElement && counterElement.classList.contains('text-2xl') && counterElement.classList.contains('font-bold')) {
+                                const currentCount = parseInt(counterElement.textContent);
+                                counterElement.textContent = (currentCount + 1).toString();
+                            }
+                        }
+                    });
+                    
+                    // Update admin dashboard if it's open in another tab
+                    try {
+                        // Check if admin dashboard is open in another tab and update it
+                        if (window.opener && !window.opener.closed) {
+                            if (window.opener.updateAdminDashboardCounts) {
+                                window.opener.updateAdminDashboardCounts();
+                            }
+                        }
+                    } catch (e) {
+                        console.log('Could not update admin dashboard:', e);
+                    }
+                    
+                    // Update available properties counter
+                    const availablePropertiesElements = document.querySelectorAll('.text-sm.font-medium.text-gray-600');
+                    availablePropertiesElements.forEach(element => {
+                        if (element.textContent.includes('Available Properties')) {
+                            const counterElement = element.nextElementSibling;
+                            if (counterElement && counterElement.classList.contains('text-2xl') && counterElement.classList.contains('font-bold')) {
+                                const currentCount = parseInt(counterElement.textContent);
+                                counterElement.textContent = (currentCount - 1).toString();
+                            }
+                        }
+                    });
                 } else {
                     alert('Error initiating purchase: ' + data.message);
                     // Restore button state

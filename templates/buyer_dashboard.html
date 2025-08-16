@@ -476,14 +476,80 @@
         const confirmation = confirm(`Are you sure you want to purchase Property ${propertyId}?\n\nThis will initiate a smart contract transaction that will:\n• Verify your identity and funds\n• Check property ownership\n• Submit for government approval\n• Execute transfer upon approval`);
         
         if (confirmation) {
-            alert(`Purchase initiated for Property ${propertyId}!\n\nTransaction Status: Pending\nSmart Contract: Activated\nNext Step: Awaiting government approval\n\nYou will receive notifications about the transaction progress.`);
+            // Show loading state
+            const button = event.target;
+            const originalText = button.innerHTML;
+            button.innerHTML = 'Processing...';
+            button.disabled = true;
+            
+            fetch(`/purchase_property/${propertyId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(`Purchase initiated successfully!\n\nTransaction ID: ${data.transaction_id}\nStatus: Pending Government Approval\n\nYou will receive notifications about the transaction progress.`);
+                    // Refresh the page to update the available properties
+                    location.reload();
+                } else {
+                    alert('Error initiating purchase: ' + data.message);
+                    // Restore button state
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error initiating purchase. Please try again.');
+                // Restore button state
+                button.innerHTML = originalText;
+                button.disabled = false;
+            });
         }
     }
     
     function initiatePurchaseFromModal() {
         if (currentPropertyId) {
-            initiatePurchase(currentPropertyId);
-            closePropertyModal();
+            const confirmation = confirm(`Are you sure you want to purchase this property?\n\nThis will initiate a smart contract transaction that will:\n• Verify your identity and funds\n• Check property ownership\n• Submit for government approval\n• Execute transfer upon approval`);
+            
+            if (confirmation) {
+                // Show loading state
+                const button = event.target;
+                const originalText = button.innerHTML;
+                button.innerHTML = 'Processing...';
+                button.disabled = true;
+                
+                fetch(`/purchase_property/${currentPropertyId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(`Purchase initiated successfully!\n\nTransaction ID: ${data.transaction_id}\nStatus: Pending Government Approval\n\nYou will receive notifications about the transaction progress.`);
+                        closePropertyModal();
+                        // Refresh the page to update the available properties
+                        location.reload();
+                    } else {
+                        alert('Error initiating purchase: ' + data.message);
+                        // Restore button state
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error initiating purchase. Please try again.');
+                    // Restore button state
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                });
+            }
         }
     }
     

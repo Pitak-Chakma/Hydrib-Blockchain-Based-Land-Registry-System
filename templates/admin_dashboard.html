@@ -147,8 +147,8 @@
                                     <div class="text-sm text-gray-500">{{ transaction.location }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {% if transaction.transaction_type == 'registration' %}bg-green-100 text-green-800{% elif transaction.transaction_type == 'transfer' %}bg-blue-100 text-blue-800{% else %}bg-purple-100 text-purple-800{% endif %}">
-                                        {{ transaction.transaction_type|title }}
+                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">
+                                        Sale
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -218,44 +218,52 @@
 <script>
     function approveTransaction(transactionId) {
         if (confirm('Are you sure you want to approve this transaction?')) {
-            // Simulate approval
-            fetch(`/approve_transaction/${transactionId}`, {
+            console.log('Approving transaction:', transactionId);
+            const url = `/approve_transaction/${transactionId}`;
+            console.log('Sending request to:', url);
+            fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'same-origin' // Include cookies
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log('Response status:', response.status);
+                console.log('Response headers:', [...response.headers.entries()]);
+                return response.json();
+            })
             .then(data => {
+                console.log('Response data:', data);
                 if (data.success) {
                     alert('Transaction approved successfully!');
-                    location.reload();
+                    window.location.href = '/dashboard'; // Force a full page reload
                 } else {
                     alert('Error approving transaction: ' + data.message);
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error approving transaction');
+                alert('Error approving transaction: ' + error.message);
             });
         }
     }
     
     function rejectTransaction(transactionId) {
-        const reason = prompt('Please provide a reason for rejection:');
-        if (reason) {
+        // Use confirm instead of prompt since prompt is not supported
+        if (confirm('Are you sure you want to reject this transaction?')) {
             fetch(`/reject_transaction/${transactionId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ reason: reason })
+                body: JSON.stringify({ reason: 'Rejected by admin' })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     alert('Transaction rejected successfully!');
-                    location.reload();
+                    window.location.href = '/dashboard'; // Force a full page reload
                 } else {
                     alert('Error rejecting transaction: ' + data.message);
                 }

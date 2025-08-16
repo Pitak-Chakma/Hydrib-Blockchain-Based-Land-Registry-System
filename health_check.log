@@ -1,8 +1,0 @@
-2025-08-16 16:48:39,524 - INFO - Starting health checks...
-2025-08-16 16:48:39,531 - WARNING - Web application returned status 403
-2025-08-16 16:48:39,533 - INFO - Database OK (users: 3, query time: 0.000s)
-2025-08-16 16:48:39,533 - INFO - Disk space OK (app: 161.0GB, data: 161.0GB, log: 161.0GB)
-2025-08-16 16:48:39,533 - INFO - No recent errors in log files
-2025-08-16 16:48:39,533 - WARNING - Email alerts not configured
-2025-08-16 16:48:39,534 - INFO - Health checks completed. Overall status: unhealthy
-2025-08-16 16:48:39,534 - ERROR - Failed to save health check results: [Errno 13] Permission denied: '/var/log/landregistry'

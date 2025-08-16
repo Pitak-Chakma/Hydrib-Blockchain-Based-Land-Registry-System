@@ -45,7 +45,7 @@
                     </div>
                     <div class="ml-4">
                         <p class="text-sm font-medium text-gray-600">Total Area</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ properties|sum(attribute='area')|round(2) if properties else 0 }} acres</p>
+                        <p class="text-2xl font-bold text-gray-900">{% set total_area = 0 %}{% for prop in properties %}{% set total_area = total_area + (prop.area|extract_area) %}{% endfor %}{{ total_area|round(2) }} acres</p>
                     </div>
                 </div>
             </div>

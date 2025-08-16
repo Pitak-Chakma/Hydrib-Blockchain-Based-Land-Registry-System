@@ -137,6 +137,20 @@ def create_app(config_class=None):
     # Ensure upload directory exists
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     
+    # Custom Jinja2 filter to extract numeric area values
+    @app.template_filter('extract_area')
+    def extract_area_filter(area_value):
+        """Extract numeric value from area field (handles both numeric and string values)"""
+        import re
+        if isinstance(area_value, (int, float)):
+            return float(area_value)
+        elif isinstance(area_value, str):
+            # Extract first numeric value from string
+            match = re.search(r'\d+(?:\.\d+)?', area_value)
+            return float(match.group()) if match else 0.0
+        else:
+            return 0.0
+    
     # Setup logging
     if not app.debug:
         logging.basicConfig(
@@ -744,6 +758,7 @@ def approve_transaction(transaction_id):
     if not rate_limit_check(f"{request.remote_addr}_admin_action", 20, 3600):  # 20 admin actions per hour
         return jsonify({'success': False, 'message': 'Too many admin actions. Please try again later.'}), 429
     
+    print(f"Approving transaction {transaction_id}")
     conn = get_db_connection()
     
     try:
@@ -755,6 +770,8 @@ def approve_transaction(transaction_id):
             WHERE t.id = ?
         ''', (transaction_id,)).fetchone()
         
+        print(f"Transaction details: {transaction}")
+        
         if not transaction:
             return jsonify({'success': False, 'message': 'Transaction not found'})
         
@@ -762,44 +779,49 @@ def approve_transaction(transaction_id):
             return jsonify({'success': False, 'message': 'Transaction is not pending'})
         
         # Update transaction status
+        print(f"Updating transaction status to approved for ID {transaction_id}")
         conn.execute('''
-            UPDATE transactions SET status = ?, approved_by = ?, approved_at = ?
+            UPDATE transactions SET status = ?
             WHERE id = ?
-        ''', ('approved', session['user_id'], datetime.datetime.now().isoformat(), transaction_id))
+        ''', ('approved', transaction_id))
         
-        # If it's a sale transaction, transfer ownership
-        if transaction['transaction_type'] == 'sale':
-            conn.execute('''
-                UPDATE land_records SET owner_id = ?, status = ?
-                WHERE id = ?
-            ''', (transaction['to_user_id'], 'active', transaction['property_id']))
-            
-            # Create blockchain entry for ownership transfer
-            transfer_data = {
-                'type': 'ownership_transfer',
-                'transaction_id': transaction_id,
-                'property_id': transaction['property_id'],
-                'previous_owner': transaction['owner_id'],
-                'new_owner': transaction['to_user_id'],
-                'sale_price': transaction['price'],
-                'approved_by': session['user_id'],
-                'timestamp': datetime.datetime.now().isoformat()
-            }
-            
-            # Get previous block hash
-            prev_block = conn.execute(
-                'SELECT block_hash FROM blockchain ORDER BY id DESC LIMIT 1'
-            ).fetchone()
-            prev_hash = prev_block['block_hash'] if prev_block else '0'
-            
-            block_hash = calculate_hash(prev_hash + json.dumps(transfer_data, sort_keys=True))
-            
-            conn.execute('''
-                INSERT INTO blockchain (block_hash, previous_hash, data, transaction_type)
-                VALUES (?, ?, ?, ?)
-            ''', (block_hash, prev_hash, json.dumps(transfer_data), 'ownership_transfer'))
+        # Transfer ownership for all approved transactions
+        print(f"Transferring ownership to {transaction['buyer_email']} for property {transaction['property_id']}")
+        conn.execute('''
+            UPDATE land_records SET owner_id = (SELECT id FROM users WHERE email = ?), status = ?
+            WHERE id = ?
+        ''', (transaction['buyer_email'], 'active', transaction['property_id']))
+        
+        # Create blockchain entry for ownership transfer
+        transfer_data = {
+            'type': 'ownership_transfer',
+            'transaction_id': transaction_id,
+            'property_id': transaction['property_id'],
+            'previous_owner': transaction['seller_id'],
+            'new_owner': transaction['buyer_email'],
+            'sale_price': transaction['sale_price'],
+            'approved_by': session['user_id'],
+            'timestamp': datetime.datetime.now().isoformat()
+        }
+        print(f"Created transfer_data: {transfer_data}")
+        
+        # Get previous block hash
+        prev_block = conn.execute(
+            'SELECT block_hash FROM blockchain ORDER BY id DESC LIMIT 1'
+        ).fetchone()
+        prev_hash = prev_block['block_hash'] if prev_block else '0'
+        print(f"Previous block hash: {prev_hash}")
+        
+        block_hash = calculate_hash(prev_hash + json.dumps(transfer_data, sort_keys=True))
+        print(f"New block hash: {block_hash}")
+        
+        conn.execute('''
+            INSERT INTO blockchain (block_hash, previous_hash, data, transaction_type)
+            VALUES (?, ?, ?, ?)
+        ''', (block_hash, prev_hash, json.dumps(transfer_data), 'ownership_transfer'))
         
         conn.commit()
+        print("Transaction committed successfully")
         return jsonify({'success': True, 'message': 'Transaction approved successfully'})
         
     except Exception as e:
@@ -835,15 +857,14 @@ def reject_transaction(transaction_id):
         
         # Update transaction status
         conn.execute('''
-            UPDATE transactions SET status = ?, approved_by = ?, approved_at = ?
+            UPDATE transactions SET status = ?
             WHERE id = ?
-        ''', ('rejected', session['user_id'], datetime.datetime.now().isoformat(), transaction_id))
+        ''', ('rejected', transaction_id))
         
-        # Reset property status if it was a sale transaction
-        if transaction['transaction_type'] == 'sale':
-            conn.execute('''
-                UPDATE land_records SET status = ? WHERE id = ?
-            ''', ('active', transaction['property_id']))
+        # Reset property status for all rejected transactions
+        conn.execute('''
+            UPDATE land_records SET status = ? WHERE id = ?
+        ''', ('active', transaction['property_id']))
         
         conn.commit()
         return jsonify({'success': True, 'message': 'Transaction rejected successfully'})
@@ -1113,6 +1134,100 @@ def ledger():
     finally:
         conn.close()
 
+@app.route('/purchase_property/<int:property_id>', methods=['POST'])
+@login_required
+@role_required('buyer')
+def purchase_property(property_id):
+    # Rate limiting check
+    if not rate_limit_check(f"{request.remote_addr}_purchase", 5, 3600):  # 5 purchases per hour
+        return jsonify({'success': False, 'message': 'Too many purchase attempts. Please try again later.'}), 429
+    
+    conn = get_db_connection()
+    
+    try:
+        # Get property details
+        property_data = conn.execute('''
+            SELECT l.*, u.full_name as owner_name, u.email as owner_email
+            FROM land_records l
+            JOIN users u ON l.owner_id = u.id
+            WHERE l.id = ?
+        ''', (property_id,)).fetchone()
+        
+        if not property_data:
+            return jsonify({'success': False, 'message': 'Property not found'})
+        
+        # Check if property is available (no pending/completed transactions)
+        existing_transaction = conn.execute('''
+            SELECT * FROM transactions 
+            WHERE property_id = ? AND status IN ('pending', 'approved', 'completed')
+        ''', (property_id,)).fetchone()
+        
+        if existing_transaction:
+            return jsonify({'success': False, 'message': 'Property is not available for purchase'})
+        
+        # Get buyer details
+        buyer = conn.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],)).fetchone()
+        
+        if not buyer:
+            return jsonify({'success': False, 'message': 'Buyer not found'})
+        
+        # Create transaction record
+        conn.execute('''
+            INSERT INTO transactions 
+            (property_id, seller_id, buyer_email, buyer_phone, payment_method, sale_price, transfer_date, registration_fee, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            property_id,
+            property_data['owner_id'],
+            buyer['email'],
+            buyer['phone'],  # Include buyer's phone number
+            'pending_payment',  # Payment method to be determined
+            property_data['market_value'],
+            datetime.date.today().isoformat(),
+            5000,  # Standard registration fee
+            'pending'
+        ))
+        
+        transaction_id = conn.lastrowid
+        
+        # Create blockchain entry for purchase initiation
+        purchase_data = {
+            'type': 'purchase_initiated',
+            'transaction_id': transaction_id,
+            'property_id': property_id,
+            'buyer_id': session['user_id'],
+            'seller_id': property_data['owner_id'],
+            'purchase_price': property_data['market_value'],
+            'timestamp': datetime.datetime.now().isoformat()
+        }
+        
+        # Get previous block hash
+        prev_block = conn.execute(
+            'SELECT block_hash FROM blockchain ORDER BY id DESC LIMIT 1'
+        ).fetchone()
+        prev_hash = prev_block['block_hash'] if prev_block else '0'
+        
+        block_hash = calculate_hash(prev_hash + json.dumps(purchase_data, sort_keys=True))
+        
+        conn.execute('''
+            INSERT INTO blockchain (block_hash, previous_hash, data, transaction_type)
+            VALUES (?, ?, ?, ?)
+        ''', (block_hash, prev_hash, json.dumps(purchase_data), 'purchase_initiated'))
+        
+        conn.commit()
+        
+        return jsonify({
+            'success': True, 
+            'message': 'Purchase request submitted successfully! Your transaction is now pending approval.',
+            'transaction_id': transaction_id
+        })
+        
+    except Exception as e:
+        conn.rollback()
+        return jsonify({'success': False, 'message': f'Error processing purchase: {str(e)}'})
+    finally:
+        conn.close()
+
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True)
+    app.run(debug=True, port=5001)

@@ -1,0 +1,43 @@
+[Unit]
+Description=Hydrib Land Registry System
+After=network.target
+Wants=network.target
+
+[Service]
+Type=exec
+User=landregistry
+Group=landregistry
+WorkingDirectory=/opt/landregistry
+Environment=FLASK_ENV=production
+EnvironmentFile=/opt/landregistry/.env
+ExecStart=/opt/landregistry/venv/bin/gunicorn --bind 127.0.0.1:8000 --workers 4 --timeout 120 --access-logfile /var/log/landregistry/access.log --error-logfile /var/log/landregistry/error.log wsgi:application
+ExecReload=/bin/kill -s HUP $MAINPID
+Restart=always
+RestartSec=10
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/landregistry /var/log/landregistry
+NoNewPrivileges=true
+LimitNOFILE=65536
+
+# Security settings
+CapabilityBoundingSet=
+AmbientCapabilities=
+SystemCallArchitectures=native
+MemoryDenyWriteExecute=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictNamespaces=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+SystemCallFilter=@system-service
+SystemCallFilter=~@debug @mount @cpu-emulation @obsolete @privileged @reboot @swap @raw-io
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=${SECRET_KEY}
+      - DATABASE_PATH=/var/lib/landregistry/land_registry.db
+      - UPLOAD_FOLDER=/var/lib/landregistry/uploads
+      - LOG_FILE=/var/log/landregistry/app.log
+    volumes:
+      - landregistry_data:/var/lib/landregistry
+      - landregistry_logs:/var/log/landregistry
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - landregistry_static:/var/www/static:ro
+    depends_on:
+      - web
+    restart: unless-stopped
+
+  backup:
+    build: .
+    command: ["/bin/sh", "-c", "while true; do python3 backup_script.py; sleep 86400; done"]
+    volumes:
+      - landregistry_data:/var/lib/landregistry
+      - landregistry_backups:/var/backups/landregistry
+    environment:
+      - FLASK_ENV=production
+      - DATABASE_PATH=/var/lib/landregistry/land_registry.db
+    restart: unless-stopped
+    depends_on:
+      - web
+
+volumes:
+  landregistry_data:
+    driver: local
+  landregistry_logs:
+    driver: local
+  landregistry_backups:
+    driver: local
+  landregistry_static:
+    driver: local
+
+networks:
+  default:
+    driver: bridge

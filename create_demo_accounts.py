@@ -43,7 +43,7 @@ def create_demo_accounts():
             print(f'Account {account["email"]} already exists')
         else:
             # Create the account
-            password_hash = generate_password_hash(account['password'])
+            password_hash = generate_password_hash(account['password'], method='pbkdf2:sha256')
             cursor.execute(
                 '''INSERT INTO users (email, password_hash, role, full_name, phone) 
                    VALUES (?, ?, ?, ?, ?)''',

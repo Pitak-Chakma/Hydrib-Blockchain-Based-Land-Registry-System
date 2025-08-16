@@ -147,8 +147,8 @@ def populate_sample_data():
     for land in land_records:
         owner_id = user_ids[land['owner_email']]
         cursor.execute(
-            'INSERT INTO land_records (plot_number, location, area, owner_id, document_hash, status) VALUES (?, ?, ?, ?, ?, ?)',
-            (land['plot_number'], land['location'], land['area'], owner_id, land['document_hash'], land['status'])
+            'INSERT INTO land_records (plot_number, area, owner_id, status, address, land_type, division, district, upazila, market_value, hash_value) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            (land['plot_number'], land['area'], owner_id, land['status'], land['location'], 'residential', 'Dhaka', 'Dhaka', 'Dhanmondi', 5000000, 'sample_hash_' + land['plot_number'])
         )
         land_ids[land['plot_number']] = cursor.lastrowid
     
@@ -217,14 +217,12 @@ def populate_sample_data():
         from_user_id = user_ids[transaction['from_user']] if transaction['from_user'] else None
         to_user_id = user_ids[transaction['to_user']]
         
+        to_user_email = [email for email, uid in user_ids.items() if uid == to_user_id][0] if to_user_id else 'unknown@example.com'
         cursor.execute(
             '''INSERT INTO transactions 
-               (land_id, from_user_id, to_user_id, transaction_type, price, status, 
-                smart_contract_result, consensus_votes, required_votes) 
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-            (land_id, from_user_id, to_user_id, transaction['transaction_type'], 
-             transaction['price'], transaction['status'], transaction['smart_contract_result'],
-             transaction['consensus_votes'], transaction['required_votes'])
+               (property_id, seller_id, buyer_email, payment_method, sale_price, transfer_date, registration_fee, status) 
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
+            (land_id, from_user_id, to_user_email, 'cash', transaction['price'], '2024-01-01', 5000, transaction['status'])
         )
     
     # Sample blockchain entries
@@ -247,8 +245,8 @@ def populate_sample_data():
     for i, entry in enumerate(blockchain_entries):
         block_hash = calculate_hash(f"{entry['transaction_data']}{entry['previous_hash']}{i}")
         cursor.execute(
-            'INSERT INTO blockchain (block_hash, previous_hash, transaction_data, nonce) VALUES (?, ?, ?, ?)',
-            (block_hash, entry['previous_hash'], entry['transaction_data'], i)
+            'INSERT INTO blockchain (block_hash, previous_hash, data) VALUES (?, ?, ?)',
+            (block_hash, entry['previous_hash'], entry['transaction_data'])
         )
     
     conn.commit()

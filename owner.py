@@ -4,7 +4,6 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# Database setup
 def init_db():
     conn = sqlite3.connect("owner_dashboard.db")
     cur = conn.cursor()
@@ -17,7 +16,6 @@ def init_db():
     conn.commit()
     conn.close()
 
-# Insert new update
 def add_update(revenue, customers, inventory):
     conn = sqlite3.connect("owner_dashboard.db")
     cur = conn.cursor()
@@ -26,7 +24,6 @@ def add_update(revenue, customers, inventory):
     conn.commit()
     conn.close()
 
-# Fetch updates
 def get_updates():
     conn = sqlite3.connect("owner_dashboard.db")
     cur = conn.cursor()
@@ -61,3 +58,62 @@ def dashboard():
 if __name__ == "__main__":
     init_db()
     app.run(debug=True)
+
+import sqlite3
+
+DB = "properties.db"
+
+def init_db():
+    conn = sqlite3.connect(DB)
+    cur = conn.cursor()
+    cur.execute("""CREATE TABLE IF NOT EXISTS properties (
+                    id INTEGER PRIMARY KEY,
+                    name TEXT,
+                    location TEXT,
+                    price REAL)""")
+    conn.commit()
+    conn.close()
+
+def add_property(name, location, price):
+    conn = sqlite3.connect(DB)
+    cur = conn.cursor()
+    cur.execute("INSERT INTO properties (name,location,price) VALUES (?,?,?)",
+                (name, location, price))
+    conn.commit()
+    conn.close()
+
+def view_properties():
+    conn = sqlite3.connect(DB)
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM properties")
+    rows = cur.fetchall()
+    conn.close()
+    return rows
+
+def remove_property(pid):
+    conn = sqlite3.connect(DB)
+    cur = conn.cursor()
+    cur.execute("DELETE FROM properties WHERE id=?", (pid,))
+    conn.commit()
+    conn.close()
+
+def menu():
+    while True:
+        print("\n🏠 Owner Property List")
+        print("1. Add Property\n2. View Properties\n3. Remove Property\n4. Exit")
+        choice = input("Enter choice: ")
+        if choice == "1":
+            n = input("Name: "); l = input("Location: "); p = float(input("Price: "))
+            add_property(n, l, p)
+        elif choice == "2":
+            for r in view_properties():
+                print(f"ID:{r[0]} | {r[1]} | {r[2]} | ${r[3]}")
+        elif choice == "3":
+            pid = int(input("Enter Property ID to remove: "))
+            remove_property(pid)
+        else:
+            break
+
+if __name__ == "__main__":
+    init_db()
+    menu()

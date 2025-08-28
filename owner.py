@@ -117,3 +117,56 @@ def menu():
 if __name__ == "__main__":
     init_db()
     menu()
+
+import sqlite3
+
+DB = "properties.db"
+
+def init_db():
+    conn = sqlite3.connect(DB)
+    cur = conn.cursor()
+    cur.execute("""CREATE TABLE IF NOT EXISTS properties (
+                    id INTEGER PRIMARY KEY,
+                    name TEXT,
+                    location TEXT,
+                    price REAL)""")
+    conn.commit(); conn.close()
+
+def add_property(name, location, price):
+    conn = sqlite3.connect(DB)
+    cur = conn.cursor()
+    cur.execute("INSERT INTO properties (name,location,price) VALUES (?,?,?)",
+                (name, location, price))
+    conn.commit(); conn.close()
+
+def get_sorted(order_by="name"):
+    conn = sqlite3.connect(DB)
+    cur = conn.cursor()
+    cur.execute(f"SELECT * FROM properties ORDER BY {order_by}")
+    rows = cur.fetchall(); conn.close()
+    return rows
+
+def menu():
+    while True:
+        print("\n🏠 Owner Sorting Menu")
+        print("1. Add Property\n2. View Sorted by Name\n3. View Sorted by Location\n4. View Sorted by Price\n5. Exit")
+        choice = input("Enter choice: ")
+        if choice == "1":
+            n = input("Name: "); l = input("Location: "); p = float(input("Price: "))
+            add_property(n, l, p)
+        elif choice == "2":
+            for r in get_sorted("name"):
+                print(f"ID:{r[0]} | {r[1]} | {r[2]} | ${r[3]}")
+        elif choice == "3":
+            for r in get_sorted("location"):
+                print(f"ID:{r[0]} | {r[1]} | {r[2]} | ${r[3]}")
+        elif choice == "4":
+            for r in get_sorted("price"):
+                print(f"ID:{r[0]} | {r[1]} | {r[2]} | ${r[3]}")
+        else:
+            break
+
+if __name__ == "__main__":
+    init_db()
+    menu()
+

@@ -14,3 +14,5 @@ if age >= 18:
     print("You are an adult.")
 else:
     print("You are a minor.")
+###I have to make some changes 
+print("Pitak Muri khay")

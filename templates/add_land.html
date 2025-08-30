@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Land - Blockchain Land Management{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-10 offset-lg-1">
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0"><i class="bi bi-plus-circle-fill text-primary me-2"></i>Add New Land Listing</h2>
+                <a href="{{ url_for('seller_dashboard') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+                </a>
+            </div>
+            
+            <!-- Main Card -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <!-- Left Side - Form -->
+                        <div class="col-md-8">
+                            <form method="POST" action="{{ url_for('add_land') }}">
+                                <div class="mb-4">
+                                    <label for="title" class="form-label fw-bold">Land Title</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-card-heading"></i></span>
+                                        <input type="text" class="form-control" id="title" name="title" placeholder="Enter property title" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="location" class="form-label fw-bold">Location</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                                        <input type="text" class="form-control" id="location" name="location" placeholder="Enter property location" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="price" class="form-label fw-bold">Price ($)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-currency-dollar"></i></span>
+                                        <input type="number" class="form-control" id="price" name="price" min="1" step="0.01" placeholder="Enter property price" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="description" class="form-label fw-bold">Description</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-file-text"></i></span>
+                                        <textarea class="form-control" id="description" name="description" rows="5" placeholder="Describe your property in detail" required></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="bi bi-plus-lg me-2"></i>Add Land Listing
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Right Side - Information -->
+                        <div class="col-md-4 d-none d-md-block">
+                            <div class="border-start ps-4 h-100">
+                                <h4 class="text-primary mb-3">Listing Guidelines</h4>
+                                <div class="mb-4">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="icon-wrapper bg-light-primary me-2">
+                                            <i class="bi bi-check-circle text-primary"></i>
+                                        </div>
+                                        <h6 class="mb-0">Accurate Information</h6>
+                                    </div>
+                                    <p class="text-muted small">Ensure all property details are accurate and verifiable.</p>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="icon-wrapper bg-light-primary me-2">
+                                            <i class="bi bi-geo-alt text-primary"></i>
+                                        </div>
+                                        <h6 class="mb-0">Precise Location</h6>
+                                    </div>
+                                    <p class="text-muted small">Include specific address and landmarks for easy identification.</p>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="icon-wrapper bg-light-primary me-2">
+                                            <i class="bi bi-currency-dollar text-primary"></i>
+                                        </div>
+                                        <h6 class="mb-0">Fair Pricing</h6>
+                                    </div>
+                                    <p class="text-muted small">Set competitive prices based on market value and property features.</p>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="icon-wrapper bg-light-primary me-2">
+                                            <i class="bi bi-file-text text-primary"></i>
+                                        </div>
+                                        <h6 class="mb-0">Detailed Description</h6>
+                                    </div>
+                                    <p class="text-muted small">Include size, features, amenities, and other relevant details.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

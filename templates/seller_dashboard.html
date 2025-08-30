@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+
+{% block title %}Seller Dashboard - Blockchain Land Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="fw-bold">Seller Dashboard</h1>
+            <p class="text-muted">Manage your land listings and transactions</p>
+        </div>
+        <div>
+            <a href="{{ url_for('add_land') }}" class="btn btn-primary d-flex align-items-center">
+                <i class="bi bi-plus-circle me-2"></i> Add New Land
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3 mb-md-0">
+            <div class="dashboard-stat-card">
+                <div class="stat-icon bg-primary-subtle text-primary">
+                    <i class="bi bi-house-fill"></i>
+                </div>
+                <div>
+                    <h3 class="mb-0">{{ lands|length }}</h3>
+                    <p class="text-muted mb-0">Total Properties</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3 mb-md-0">
+            <div class="dashboard-stat-card">
+                <div class="stat-icon bg-success-subtle text-success">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <div>
+                    <h3 class="mb-0">{{ lands|selectattr('sold', 'equalto', true)|list|length }}</h3>
+                    <p class="text-muted mb-0">Properties Sold</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="dashboard-stat-card">
+                <div class="stat-icon bg-info-subtle text-info">
+                    <i class="bi bi-currency-dollar"></i>
+                </div>
+                <div>
+                    <h3 class="mb-0">{{ transactions|selectattr('status', 'equalto', 'approved')|list|length }}</h3>
+                    <p class="text-muted mb-0">Completed Transactions</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="h3 mb-0">Your Land Listings</h2>
+            </div>
+        </div>
+    
+    <div class="col-md-12">
+        <div class="card mb-4 border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom">
+                <div class="d-flex align-items-center">
+                    <div class="icon-wrapper bg-primary-subtle rounded-circle p-2 me-2">
+                        <i class="bi bi-houses text-primary"></i>
+                    </div>
+                    <h5 class="card-title mb-0">Your Properties</h5>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if lands %}
+                    <div class="row">
+                        {% for land in lands %}
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100 border-0 shadow-sm hover-card {% if land.sold %}border-start border-success border-4{% endif %}">
+                                    <div class="card-header bg-light border-0 py-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h5 class="card-title mb-0 text-truncate">{{ land.title }}</h5>
+                                            {% if land.sold %}
+                                                <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">
+                                                    <i class="bi bi-check-circle-fill me-1"></i>Sold
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-info-subtle text-info px-3 py-2 rounded-pill">
+                                                    <i class="bi bi-tag-fill me-1"></i>For Sale
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="icon-wrapper bg-light rounded-circle p-2 me-2">
+                                                <i class="bi bi-geo-alt text-secondary"></i>
+                                            </div>
+                                            <h6 class="card-subtitle mb-0 text-muted">{{ land.location }}</h6>
+                                        </div>
+                                        <p class="card-text">{{ land.description }}</p>
+                                        <div class="d-flex align-items-center mt-3">
+                                            <div class="icon-wrapper bg-success-subtle rounded-circle p-2 me-2">
+                                                <i class="bi bi-currency-dollar text-success"></i>
+                                            </div>
+                                            <h5 class="mb-0 fw-bold">${{ land.price }}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info d-flex align-items-center">
+                        <i class="bi bi-info-circle-fill me-2 fs-4"></i>
+                        <div>You haven't listed any land properties yet. Click "Add New Land" to get started.</div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom">
+                <div class="d-flex align-items-center">
+                    <div class="icon-wrapper bg-success-subtle rounded-circle p-2 me-2">
+                        <i class="bi bi-receipt text-success"></i>
+                    </div>
+                    <h5 class="card-title mb-0">Your Transactions</h5>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if transactions %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Land Title</th>
+                                    <th>Buyer</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Blockchain Record</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transaction in transactions %}
+                                    <tr>
+                                        <td><span class="badge bg-primary-subtle text-primary">{{ transaction.id }}</span></td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="icon-wrapper bg-light rounded-circle p-2 me-2">
+                                                    <i class="bi bi-house text-secondary"></i>
+                                                </div>
+                                                <span>{{ transaction.land.title }}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-circle bg-warning-subtle text-warning me-2">
+                                                    {{ transaction.buyer.username[0]|upper }}
+                                                </div>
+                                                <span>{{ transaction.buyer.username }}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="icon-wrapper bg-success-subtle rounded-circle p-2 me-2">
+                                                    <i class="bi bi-currency-dollar text-success"></i>
+                                                </div>
+                                                <span class="fw-bold">${{ transaction.land.price }}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {% if transaction.status == 'pending' %}
+                                                <span class="badge bg-warning-subtle text-warning px-3 py-2 rounded-pill">
+                                                    <i class="bi bi-hourglass-split me-1"></i>Pending
+                                                </span>
+                                            {% elif transaction.status == 'approved' %}
+                                                <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">
+                                                    <i class="bi bi-check-circle-fill me-1"></i>Approved
+                                                </span>
+                                            {% elif transaction.status == 'rejected' %}
+                                                <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill">
+                                                    <i class="bi bi-x-circle-fill me-1"></i>Rejected
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if transaction.blockchain_record %}
+                                                <span class="badge bg-success-subtle text-success blockchain-record" data-bs-toggle="tooltip" title="Verified on blockchain">
+                                                    <i class="bi bi-shield-check me-1"></i>{{ transaction.blockchain_record }}
+                                                </span>
+                                            {% else %}
+                                                <span class="text-muted"><i class="bi bi-dash-circle me-1"></i>Pending</span>
+                                            {% endif %}
+                                        </td>
+                                        <td><i class="bi bi-calendar-check me-1 text-muted"></i>{{ transaction.timestamp.strftime('%Y-%m-%d') }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info d-flex align-items-center mb-0">
+                        <i class="bi bi-info-circle-fill me-2 fs-4"></i>
+                        <div>You don't have any transactions yet.</div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

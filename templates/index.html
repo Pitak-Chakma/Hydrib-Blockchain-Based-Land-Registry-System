@@ -1,226 +1,230 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+
+{% block title %}Home - Blockchain Land Management{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="gradient-bg text-white py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center animate-fade-in">
-            <h1 class="text-4xl md:text-6xl font-bold mb-6">
-                Secure Land Registry for
-                <span class="text-bangladesh-gold">Bangladesh</span>
-            </h1>
-            <p class="text-xl md:text-2xl mb-8 text-gray-200 max-w-3xl mx-auto">
-                A revolutionary blockchain-based system ensuring transparent, secure, and efficient land registration with reduced fraud and enhanced trust.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                {% if not session.user_id %}
-                    <a href="{{ url_for('register') }}" class="bg-bangladesh-gold hover:bg-yellow-500 text-bangladesh-green px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105">
-                        Get Started
-                    </a>
-                    <a href="{{ url_for('login') }}" class="border-2 border-white text-white hover:bg-white hover:text-bangladesh-green px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300">
-                        Login
-                    </a>
+<div class="hero-section py-5 mb-5" style="background: linear-gradient(135deg, #4a6cf7 0%, #24337a 100%); border-radius: 0 0 50px 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-white">
+                <h1 class="display-4 fw-bold mb-4" style="color: #ffdd57;">Blockchain Land Management System</h1>
+                <p class="lead mb-4" style="color: #ffffff;">A secure and transparent way to manage land transactions using blockchain technology.</p>
+                {% if not session.get('user_id') %}
+                <div class="d-flex gap-3 mt-4">
+                    <a href="{{ url_for('signup') }}" class="btn btn-light btn-lg px-4">Get Started</a>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg px-4">Login</a>
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-6 d-none d-lg-block text-center">
+                <div class="blockchain-visual p-4">
+                    <div class="blockchain-node land-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                    <div class="blockchain-node document-icon"><i class="bi bi-file-earmark-text-fill"></i></div>
+                    <div class="blockchain-node security-icon"><i class="bi bi-shield-lock-fill"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 offset-md-1 text-center">
+        
+        <div class="section-heading text-center mb-5">
+            <h2 class="fw-bold">How It Works</h2>
+            <div class="heading-line mx-auto mt-3"></div>
+        </div>
+        
+        <div class="row mt-4 g-4">
+            <div class="col-md-4">
+                <div class="feature-card h-100 p-4 text-center" style="border-radius: 15px; border: 1px solid rgba(74, 108, 247, 0.1); transition: all 0.3s ease;">
+                    <div class="icon-wrapper mb-4 mx-auto" style="width: 80px; height: 80px; background-color: rgba(74, 108, 247, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-house-check" style="font-size: 2rem; color: #4a6cf7;"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">For Land Owners</h5>
+                    <p>Register as a Seller to list your land properties for sale on our secure platform with blockchain verification.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card h-100 p-4 text-center" style="border-radius: 15px; border: 1px solid rgba(74, 108, 247, 0.1); transition: all 0.3s ease;">
+                    <div class="icon-wrapper mb-4 mx-auto" style="width: 80px; height: 80px; background-color: rgba(74, 108, 247, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-search" style="font-size: 2rem; color: #4a6cf7;"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">For Buyers</h5>
+                    <p>Browse available land listings and make purchase requests with confidence, backed by immutable blockchain records.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card h-100 p-4 text-center" style="border-radius: 15px; border: 1px solid rgba(74, 108, 247, 0.1); transition: all 0.3s ease;">
+                    <div class="icon-wrapper mb-4 mx-auto" style="width: 80px; height: 80px; background-color: rgba(74, 108, 247, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-building-check" style="font-size: 2rem; color: #4a6cf7;"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Government Oversight</h5>
+                    <p>All transactions are verified and approved by government officials for legal compliance and recorded on the blockchain.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section-heading text-center mt-5 mb-5">
+            <h2 class="fw-bold">Blockchain Advantage</h2>
+            <div class="heading-line mx-auto mt-3"></div>
+            <p class="lead mt-4">Our system leverages blockchain technology to create immutable records of land ownership and transactions</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="advantage-card p-4 h-100" style="border-radius: 15px; border-left: 4px solid #4a6cf7; background-color: rgba(74, 108, 247, 0.03);">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-small me-3" style="width: 40px; height: 40px; background-color: rgba(74, 108, 247, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-eye" style="color: #4a6cf7;"></i>
+                        </div>
+                        <h5 class="fw-bold mb-0">Transparency</h5>
+                    </div>
+                    <p class="mb-0">Complete visibility into all transactions, ensuring openness and trust in the land registry process.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="advantage-card p-4 h-100" style="border-radius: 15px; border-left: 4px solid #4a6cf7; background-color: rgba(74, 108, 247, 0.03);">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-small me-3" style="width: 40px; height: 40px; background-color: rgba(74, 108, 247, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-shield-check" style="color: #4a6cf7;"></i>
+                        </div>
+                        <h5 class="fw-bold mb-0">Fraud Prevention</h5>
+                    </div>
+                    <p class="mb-0">Elimination of fraud and double-selling through cryptographic verification and consensus mechanisms.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="advantage-card p-4 h-100" style="border-radius: 15px; border-left: 4px solid #4a6cf7; background-color: rgba(74, 108, 247, 0.03);">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-small me-3" style="width: 40px; height: 40px; background-color: rgba(74, 108, 247, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-lock" style="color: #4a6cf7;"></i>
+                        </div>
+                        <h5 class="fw-bold mb-0">Immutable Records</h5>
+                    </div>
+                    <p class="mb-0">Permanent, tamper-proof record of ownership that cannot be altered or deleted once verified.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="advantage-card p-4 h-100" style="border-radius: 15px; border-left: 4px solid #4a6cf7; background-color: rgba(74, 108, 247, 0.03);">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-small me-3" style="width: 40px; height: 40px; background-color: rgba(74, 108, 247, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-lightning" style="color: #4a6cf7;"></i>
+                        </div>
+                        <h5 class="fw-bold mb-0">Efficiency</h5>
+                    </div>
+                    <p class="mb-0">Streamlined process with reduced paperwork and faster transaction times compared to traditional methods.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="advantage-card p-4 h-100" style="border-radius: 15px; border-left: 4px solid #4a6cf7; background-color: rgba(74, 108, 247, 0.03);">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-small me-3" style="width: 40px; height: 40px; background-color: rgba(74, 108, 247, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-key" style="color: #4a6cf7;"></i>
+                        </div>
+                        <h5 class="fw-bold mb-0">Security</h5>
+                    </div>
+                    <p class="mb-0">Enhanced security through cryptographic verification, protecting sensitive land ownership data.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="advantage-card p-4 h-100" style="border-radius: 15px; border-left: 4px solid #4a6cf7; background-color: rgba(74, 108, 247, 0.03);">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-small me-3" style="width: 40px; height: 40px; background-color: rgba(74, 108, 247, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-globe" style="color: #4a6cf7;"></i>
+                        </div>
+                        <h5 class="fw-bold mb-0">Accessibility</h5>
+                    </div>
+                    <p class="mb-0">Global access to land records and transaction history, enabling remote verification and management.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section-heading text-center mt-5 mb-5">
+            <h2 class="fw-bold">Public Blockchain Transactions</h2>
+            <div class="heading-line mx-auto mt-3"></div>
+            <p class="lead mt-4">View all verified land transactions recorded on our secure blockchain ledger</p>
+        </div>
+        
+        <div class="blockchain-transactions-container p-4" style="background-color: rgba(74, 108, 247, 0.03); border-radius: 20px; border: 1px solid rgba(74, 108, 247, 0.1);">
+            <div class="d-flex justify-content-center mb-4">
+                <button class="btn btn-primary px-4 py-2" type="button" data-bs-toggle="collapse" data-bs-target="#blockchainTransactions" aria-expanded="false" aria-controls="blockchainTransactions">
+                    <i class="bi bi-database-fill me-2"></i> View Blockchain Records
+                </button>
+            </div>
+            
+            <div class="collapse" id="blockchainTransactions">
+                {% if public_transactions %}
+                    <div class="table-responsive">
+                        <table class="table table-hover" style="border-radius: 10px; overflow: hidden;">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Land Title</th>
+                                    <th>Seller</th>
+                                    <th>Buyer</th>
+                                    <th>Blockchain Record</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transaction in public_transactions %}
+                                    <tr>
+                                        <td><span class="fw-medium">#{{ transaction.id }}</span></td>
+                                        <td>{{ transaction.land.title }}</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-person-circle me-2 text-primary"></i>
+                                                {{ transaction.seller.username }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-person-circle me-2 text-success"></i>
+                                                {{ transaction.buyer.username }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-success blockchain-record" style="font-family: 'Roboto Mono', monospace; letter-spacing: 1px;">
+                                                {{ transaction.blockchain_record }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-calendar-check me-2 text-muted"></i>
+                                                {{ transaction.timestamp.strftime('%Y-%m-%d') }}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 {% else %}
-                    <a href="{{ url_for('dashboard') }}" class="bg-bangladesh-gold hover:bg-yellow-500 text-bangladesh-green px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105">
-                        Go to Dashboard
-                    </a>
+                    <div class="alert alert-info d-flex align-items-center" style="border-radius: 10px;">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        <div>No blockchain transactions have been recorded yet.</div>
+                    </div>
                 {% endif %}
             </div>
         </div>
-    </div>
-</section>
-
-<!-- Features Section -->
-<section class="py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16 animate-slide-up">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Revolutionary Features
-            </h2>
-            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                Our hybrid blockchain system combines the best of public transparency and private security
-            </p>
-        </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Feature 1 -->
-            <div class="bg-light-green p-8 rounded-xl card-hover">
-                <div class="w-16 h-16 bg-bangladesh-green rounded-full flex items-center justify-center mb-6">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                    </svg>
-                </div>
-                <h3 class="text-xl font-bold text-bangladesh-green mb-4">Blockchain Security</h3>
-                <p class="text-gray-700">Tamper-proof land records using hybrid blockchain technology ensuring maximum security and transparency.</p>
-            </div>
-            
-            <!-- Feature 2 -->
-            <div class="bg-light-green p-8 rounded-xl card-hover">
-                <div class="w-16 h-16 bg-bangladesh-green rounded-full flex items-center justify-center mb-6">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    </svg>
-                </div>
-                <h3 class="text-xl font-bold text-bangladesh-green mb-4">Role-Based Access</h3>
-                <p class="text-gray-700">Controlled access for government officials, landowners, and buyers with appropriate permissions.</p>
-            </div>
-            
-            <!-- Feature 3 -->
-            <div class="bg-light-green p-8 rounded-xl card-hover">
-                <div class="w-16 h-16 bg-bangladesh-green rounded-full flex items-center justify-center mb-6">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
-                    </svg>
-                </div>
-                <h3 class="text-xl font-bold text-bangladesh-green mb-4">Smart Contracts</h3>
-                <p class="text-gray-700">Automated verification and approval processes reducing manual errors and transaction delays.</p>
-            </div>
-            
-            <!-- Feature 4 -->
-            <div class="bg-light-green p-8 rounded-xl card-hover">
-                <div class="w-16 h-16 bg-bangladesh-green rounded-full flex items-center justify-center mb-6">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                </div>
-                <h3 class="text-xl font-bold text-bangladesh-green mb-4">Document Verification</h3>
-                <p class="text-gray-700">Secure off-chain document storage with on-chain hash verification ensuring data integrity.</p>
-            </div>
-            
-            <!-- Feature 5 -->
-            <div class="bg-light-green p-8 rounded-xl card-hover">
-                <div class="w-16 h-16 bg-bangladesh-green rounded-full flex items-center justify-center mb-6">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-                    </svg>
-                </div>
-                <h3 class="text-xl font-bold text-bangladesh-green mb-4">Consensus Mechanism</h3>
-                <p class="text-gray-700">Trust-based consensus with government oversight ensuring fast and secure transactions.</p>
-            </div>
-            
-            <!-- Feature 6 -->
-            <div class="bg-light-green p-8 rounded-xl card-hover">
-                <div class="w-16 h-16 bg-bangladesh-green rounded-full flex items-center justify-center mb-6">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                    </svg>
-                </div>
-                <h3 class="text-xl font-bold text-bangladesh-green mb-4">Transparent Ledger</h3>
-                <p class="text-gray-700">Immutable and transparent transaction records reducing disputes and corruption.</p>
+        {% if not session.get('user_id') %}
+        <div class="cta-section mt-5 p-5 text-center" style="background: linear-gradient(135deg, rgba(74, 108, 247, 0.1) 0%, rgba(74, 108, 247, 0.05) 100%); border-radius: 20px;">
+            <h3 class="fw-bold mb-4">Ready to Get Started?</h3>
+            <p class="lead mb-4">Join our platform today and experience the future of secure land management</p>
+            <div class="d-flex justify-content-center gap-4 mt-4">
+                <a href="{{ url_for('signup') }}" class="btn btn-primary btn-lg px-5 py-3">
+                    <i class="bi bi-person-plus me-2"></i> Create Account
+                </a>
+                <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg px-5 py-3">
+                    <i class="bi bi-box-arrow-in-right me-2"></i> Login
+                </a>
             </div>
         </div>
-    </div>
-</section>
-
-<!-- Objectives Section -->
-<section class="py-20 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                System Objectives
-            </h2>
-            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                Our mission to transform land registration in Bangladesh
-            </p>
-        </div>
-        
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div class="space-y-8">
-                <div class="flex items-start space-x-4">
-                    <div class="w-8 h-8 bg-bangladesh-red rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                        <span class="text-white font-bold text-sm">1</span>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">Reduce Fraud & Corruption</h3>
-                        <p class="text-gray-600">Eliminate fraudulent land transactions through immutable blockchain records and transparent processes.</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-start space-x-4">
-                    <div class="w-8 h-8 bg-bangladesh-red rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                        <span class="text-white font-bold text-sm">2</span>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">Enhance Trust</h3>
-                        <p class="text-gray-600">Build public confidence through transparent, verifiable, and tamper-proof land records.</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-start space-x-4">
-                    <div class="w-8 h-8 bg-bangladesh-red rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                        <span class="text-white font-bold text-sm">3</span>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">Improve Efficiency</h3>
-                        <p class="text-gray-600">Streamline registration processes with automated smart contracts and digital workflows.</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-start space-x-4">
-                    <div class="w-8 h-8 bg-bangladesh-red rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                        <span class="text-white font-bold text-sm">4</span>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">Ensure Security</h3>
-                        <p class="text-gray-600">Protect sensitive data with hybrid blockchain architecture and cryptographic security.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="bg-white p-8 rounded-2xl shadow-xl">
-                <h3 class="text-2xl font-bold text-bangladesh-green mb-6 text-center">System Benefits</h3>
-                <div class="space-y-4">
-                    <div class="flex items-center space-x-3">
-                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        <span class="text-gray-700">99.9% Fraud Reduction</span>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        <span class="text-gray-700">80% Faster Processing</span>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        <span class="text-gray-700">100% Transparency</span>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        <span class="text-gray-700">24/7 Availability</span>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        <span class="text-gray-700">Immutable Records</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Call to Action -->
-<section class="gradient-bg text-white py-16">
-    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl md:text-4xl font-bold mb-6">
-            Ready to Transform Land Registration?
-        </h2>
-        <p class="text-xl mb-8 text-gray-200">
-            Join the future of secure, transparent, and efficient land management in Bangladesh.
-        </p>
-        {% if not session.user_id %}
-            <a href="{{ url_for('register') }}" class="bg-bangladesh-gold hover:bg-yellow-500 text-bangladesh-green px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105 inline-block">
-                Start Your Journey
-            </a>
         {% endif %}
     </div>
-</section>
+</div>
 {% endblock %}

@@ -1,369 +1,274 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
-{% block title %}Admin Dashboard - Hydrib Land Registry{% endblock %}
+{% block title %}Admin Dashboard - Blockchain Land Management{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gray-50 py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Header -->
-        <div class="mb-8">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Government Official Dashboard</h1>
-                    <p class="text-gray-600 mt-2">Oversee and manage the blockchain land registry system</p>
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="mb-0"><i class="bi bi-speedometer2 me-2"></i>Admin Dashboard</h1>
+            <p class="text-muted">Manage users and system operations</p>
+        </div>
+        <div class="d-flex">
+            <div class="dashboard-stat-card me-3 p-3 rounded shadow-sm bg-primary text-white">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon me-3">
+                        <i class="bi bi-people-fill fs-1"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-0">{{ user_counts.total }}</h3>
+                        <p class="mb-0">Total Users</p>
+                    </div>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <div class="bg-bangladesh-red text-white px-4 py-2 rounded-lg">
-                        <span class="font-semibold">Admin Access</span>
+            </div>
+            <div class="dashboard-stat-card p-3 rounded shadow-sm bg-danger text-white">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon me-3">
+                        <i class="bi bi-clock-history fs-1"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-0">{{ user_counts.pending }}</h3>
+                        <p class="mb-0">Pending Approvals</p>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
-                <div class="flex items-center">
-                    <div class="w-12 h-12 bg-bangladesh-green rounded-full flex items-center justify-center">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Total Properties</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ total_lands }}</p>
-                    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom-0 pt-4">
+                    <h5 class="card-title"><i class="bi bi-pie-chart-fill me-2 text-primary"></i>System Overview</h5>
                 </div>
-            </div>
-
-            <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
-                <div class="flex items-center">
-                    <div class="w-12 h-12 bg-bangladesh-gold rounded-full flex items-center justify-center">
-                        <svg class="w-6 h-6 text-bangladesh-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Registered Users</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ total_users }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
-                <div class="flex items-center">
-                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Total Transactions</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ total_transactions }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
-                <div class="flex items-center">
-                    <div class="w-12 h-12 bg-bangladesh-red rounded-full flex items-center justify-center">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Pending Approvals</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ pending_transactions|length }}</p>
-                    </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-0 border-bottom">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-wrapper bg-primary-subtle rounded-circle p-2 me-3">
+                                    <i class="bi bi-people text-primary"></i>
+                                </div>
+                                <span>Total Users</span>
+                            </div>
+                            <span class="badge bg-primary rounded-pill">{{ user_counts.total }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-0 border-bottom">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-wrapper bg-secondary-subtle rounded-circle p-2 me-3">
+                                    <i class="bi bi-person-gear text-secondary"></i>
+                                </div>
+                                <span>Admins</span>
+                            </div>
+                            <span class="badge bg-secondary rounded-pill">{{ user_counts.admin }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-0 border-bottom">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-wrapper bg-info-subtle rounded-circle p-2 me-3">
+                                    <i class="bi bi-building text-info"></i>
+                                </div>
+                                <span>Government Officials</span>
+                            </div>
+                            <span class="badge bg-info rounded-pill">{{ user_counts.government }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-0 border-bottom">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-wrapper bg-success-subtle rounded-circle p-2 me-3">
+                                    <i class="bi bi-house-check text-success"></i>
+                                </div>
+                                <span>Sellers</span>
+                            </div>
+                            <span class="badge bg-success rounded-pill">{{ user_counts.seller }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-0 border-bottom">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-wrapper bg-warning-subtle rounded-circle p-2 me-3">
+                                    <i class="bi bi-cash-coin text-warning"></i>
+                                </div>
+                                <span>Buyers</span>
+                            </div>
+                            <span class="badge bg-warning text-dark rounded-pill">{{ user_counts.buyer }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-0">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-wrapper bg-danger-subtle rounded-circle p-2 me-3">
+                                    <i class="bi bi-hourglass-split text-danger"></i>
+                                </div>
+                                <span>Pending Approvals</span>
+                            </div>
+                            <span class="badge bg-danger rounded-pill">{{ user_counts.pending }}</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
-
-        <!-- Quick Actions -->
-        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-            <h2 class="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <a href="/ledger" class="flex items-center p-4 bg-bangladesh-green text-white rounded-lg hover:bg-dark-green transition-colors duration-200">
-                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <span class="font-medium">View Ledger</span>
-                </a>
-                
-                <a href="{{ url_for('register_land') }}" class="flex items-center p-4 bg-bangladesh-gold text-bangladesh-green rounded-lg hover:bg-yellow-500 transition-colors duration-200">
-                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                    <span class="font-medium">Register Land</span>
-                </a>
-                
-                <button onclick="generateReport()" class="flex items-center p-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200">
-                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <span class="font-medium">Generate Report</span>
-                </button>
-                
-                <button onclick="systemHealth()" class="flex items-center p-4 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors duration-200">
-                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                    </svg>
-                    <span class="font-medium">System Health</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Pending Transactions -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-bold text-gray-900">Pending Transactions</h2>
-                <span class="bg-bangladesh-red text-white px-3 py-1 rounded-full text-sm font-medium">
-                    {{ pending_transactions|length }} Pending
-                </span>
+        
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom-0 pt-4 d-flex justify-content-between align-items-center">
+                    <h5 class="card-title"><i class="bi bi-clock-history me-2 text-primary"></i>Pending User Approvals</h5>
+                    <span class="badge bg-danger">{{ pending_users|length }} Pending</span>
+                </div>
+                <div class="card-body">
+                    {% if pending_users %}
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Username</th>
+                                        <th>Role</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user in pending_users %}
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar-circle bg-primary-subtle text-primary me-3">
+                                                        {{ user.username[0]|upper }}
+                                                    </div>
+                                                    {{ user.username }}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {% if user.role == 'seller' %}
+                                                    <span class="badge bg-success-subtle text-success"><i class="bi bi-house-check me-1"></i>{{ user.role.capitalize() }}</span>
+                                                {% elif user.role == 'buyer' %}
+                                                    <span class="badge bg-warning-subtle text-warning"><i class="bi bi-cash-coin me-1"></i>{{ user.role.capitalize() }}</span>
+                                                {% elif user.role == 'government' %}
+                                                    <span class="badge bg-info-subtle text-info"><i class="bi bi-building me-1"></i>{{ user.role.capitalize() }}</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary-subtle text-secondary"><i class="bi bi-person me-1"></i>{{ user.role.capitalize() }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="{{ url_for('approve_user', user_id=user.id) }}" class="btn btn-success btn-sm"><i class="bi bi-check-circle me-1"></i>Approve</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info d-flex align-items-center mb-0">
+                            <i class="bi bi-info-circle-fill me-2 fs-4"></i>
+                            <div>No pending user approvals at this time.</div>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
             
-            {% if pending_transactions %}
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transaction ID</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">From</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">To</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            {% for transaction in pending_transactions %}
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                    #{{ transaction.id }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ transaction.plot_number }}</div>
-                                    <div class="text-sm text-gray-500">{{ transaction.location }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">
-                                        Sale
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ transaction.from_user or 'System' }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ transaction.to_user }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ transaction.created_at[:16].replace('T', ' ') if transaction.created_at else 'N/A' }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                                    <button onclick="approveTransaction('{{ transaction.id }}')" 
-                                            class="text-green-600 hover:text-green-900 bg-green-100 hover:bg-green-200 px-3 py-1 rounded transition-colors duration-200">
-                                        Approve
-                                    </button>
-                                    <button onclick="rejectTransaction('{{ transaction.id }}')" 
-                                            class="text-red-600 hover:text-red-900 bg-red-100 hover:bg-red-200 px-3 py-1 rounded transition-colors duration-200">
-                                        Reject
-                                    </button>
-                                    <button onclick="viewDetails('{{ transaction.id }}')" 
-                                            class="text-blue-600 hover:text-blue-900 bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded transition-colors duration-200">
-                                        Details
-                                    </button>
-                                </td>
-                            </tr>
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom-0 pt-4">
+                    <h5 class="card-title"><i class="bi bi-people-fill me-2 text-primary"></i>User Management</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in all_users %}
+                                    <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-circle bg-primary-subtle text-primary me-3">
+                                                {{ user.username[0]|upper }}
+                                            </div>
+                                            {{ user.username }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if user.role == 'admin' %}
+                                            <span class="badge bg-secondary-subtle text-secondary"><i class="bi bi-person-gear me-1"></i>{{ user.role.capitalize() }}</span>
+                                        {% elif user.role == 'government' %}
+                                            <span class="badge bg-info-subtle text-info"><i class="bi bi-building me-1"></i>{{ user.role.capitalize() }}</span>
+                                        {% elif user.role == 'seller' %}
+                                            <span class="badge bg-success-subtle text-success"><i class="bi bi-house-check me-1"></i>{{ user.role.capitalize() }}</span>
+                                        {% elif user.role == 'buyer' %}
+                                            <span class="badge bg-warning-subtle text-warning"><i class="bi bi-cash-coin me-1"></i>{{ user.role.capitalize() }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if user.approved %}
+                                            <span class="badge bg-success-subtle text-success"><i class="bi bi-check-circle me-1"></i>Approved</span>
+                                        {% else %}
+                                            <span class="badge bg-warning-subtle text-warning"><i class="bi bi-hourglass-split me-1"></i>Pending</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editUserModal{{ user.id }}">
+                                                <i class="bi bi-pencil-square me-1"></i>Edit
+                                            </button>
+                                            <a href="{{ url_for('delete_user', user_id=user.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?')">
+                                                <i class="bi bi-trash me-1"></i>Delete
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Edit User Modal -->
+                                <div class="modal fade" id="editUserModal{{ user.id }}" tabindex="-1" aria-labelledby="editUserModalLabel{{ user.id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content border-0 shadow">
+                                            <div class="modal-header bg-primary text-white">
+                                                <h5 class="modal-title" id="editUserModalLabel{{ user.id }}"><i class="bi bi-person-gear me-2"></i>Edit User: {{ user.username }}</h5>
+                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body p-4">
+                                                <form action="{{ url_for('update_user', user_id=user.id) }}" method="post">
+                                                    <div class="mb-3">
+                                                        <label for="username{{ user.id }}" class="form-label">Username</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
+                                                            <input type="text" class="form-control" id="username{{ user.id }}" name="username" value="{{ user.username }}" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="password{{ user.id }}" class="form-label">New Password (leave blank to keep current)</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text bg-light"><i class="bi bi-key"></i></span>
+                                                            <input type="password" class="form-control" id="password{{ user.id }}" name="password">
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="role{{ user.id }}" class="form-label">Role</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text bg-light"><i class="bi bi-person-badge"></i></span>
+                                                            <select class="form-select" id="role{{ user.id }}" name="role" required>
+                                                                <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+                                                                <option value="government" {% if user.role == 'government' %}selected{% endif %}>Government Official</option>
+                                                                <option value="seller" {% if user.role == 'seller' %}selected{% endif %}>Seller</option>
+                                                                <option value="buyer" {% if user.role == 'buyer' %}selected{% endif %}>Buyer</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-4 form-check form-switch">
+                                                        <input type="checkbox" class="form-check-input" id="approved{{ user.id }}" name="approved" {% if user.approved %}checked{% endif %}>
+                                                        <label class="form-check-label" for="approved{{ user.id }}">Approved</label>
+                                                    </div>
+                                                    <div class="d-flex justify-content-end gap-2">
+                                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle me-1"></i>Cancel</button>
+                                                        <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i>Save Changes</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-            {% else %}
-                <div class="text-center py-12">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">No pending transactions</h3>
-                    <p class="mt-1 text-sm text-gray-500">All transactions have been processed.</p>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-</div>
-
-<!-- Transaction Details Modal -->
-<div id="transactionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
-    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <div class="sm:flex sm:items-start">
-                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Transaction Details</h3>
-                        <div id="transactionDetails" class="space-y-3">
-                            <!-- Details will be populated by JavaScript -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                <button onclick="closeModal()" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                    Close
-                </button>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-    // Function to update pending transactions count
-    function updatePendingTransactionsCount() {
-        // Get the current count elements
-        const pendingCountElements = document.querySelectorAll('.bg-bangladesh-red.text-white.px-3.py-1.rounded-full.text-sm.font-medium');
-        const pendingStatsElement = document.querySelector('.text-sm.font-medium.text-gray-600:contains("Pending Approvals") + .text-2xl.font-bold');
-        
-        // Fetch the latest count from the server
-        fetch('/get_pending_count', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'same-origin'
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Update the count in the header
-                pendingCountElements.forEach(element => {
-                    element.textContent = data.count + ' Pending';
-                });
-                
-                // Update the count in the stats card
-                const pendingApprovalElements = document.querySelectorAll('.text-sm.font-medium.text-gray-600');
-                pendingApprovalElements.forEach(element => {
-                    if (element.textContent.includes('Pending Approvals')) {
-                        const counterElement = element.nextElementSibling;
-                        if (counterElement && counterElement.classList.contains('text-2xl') && counterElement.classList.contains('font-bold')) {
-                            counterElement.textContent = data.count;
-                        }
-                    }
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error updating pending count:', error);
-        });
-    }
-    
-    // Check for updates every 30 seconds
-    setInterval(updatePendingTransactionsCount, 30000);
-    
-    // Function to manually update the pending count (can be called from other pages)
-    window.updateAdminDashboardCounts = function() {
-        updatePendingTransactionsCount();
-    };
-    
-    function approveTransaction(transactionId) {
-        if (confirm('Are you sure you want to approve this transaction?')) {
-            console.log('Approving transaction:', transactionId);
-            const url = `/approve_transaction/${transactionId}`;
-            console.log('Sending request to:', url);
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'same-origin' // Include cookies
-            })
-            .then(response => {
-                console.log('Response status:', response.status);
-                console.log('Response headers:', [...response.headers.entries()]);
-                return response.json();
-            })
-            .then(data => {
-                console.log('Response data:', data);
-                if (data.success) {
-                    alert('Transaction approved successfully!');
-                    window.location.href = '/dashboard'; // Force a full page reload
-                } else {
-                    alert('Error approving transaction: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error approving transaction: ' + error.message);
-            });
-        }
-    }
-    
-    function rejectTransaction(transactionId) {
-        // Use confirm instead of prompt since prompt is not supported
-        if (confirm('Are you sure you want to reject this transaction?')) {
-            fetch(`/reject_transaction/${transactionId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ reason: 'Rejected by admin' })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Transaction rejected successfully!');
-                    window.location.href = '/dashboard'; // Force a full page reload
-                } else {
-                    alert('Error rejecting transaction: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error rejecting transaction');
-            });
-        }
-    }
-    
-    function viewDetails(transactionId) {
-        // Simulate fetching transaction details
-        const details = {
-            id: transactionId,
-            type: 'Land Transfer',
-            property: 'Plot #12345',
-            location: 'Dhaka, Bangladesh',
-            from: 'John Doe',
-            to: 'Jane Smith',
-            price: '৳5,00,000',
-            date: '2024-01-15',
-            status: 'Pending Approval'
-        };
-        
-        const detailsHtml = `
-            <div class="grid grid-cols-2 gap-3 text-sm">
-                <div><strong>Transaction ID:</strong></div><div>#${details.id}</div>
-                <div><strong>Type:</strong></div><div>${details.type}</div>
-                <div><strong>Property:</strong></div><div>${details.property}</div>
-                <div><strong>Location:</strong></div><div>${details.location}</div>
-                <div><strong>From:</strong></div><div>${details.from}</div>
-                <div><strong>To:</strong></div><div>${details.to}</div>
-                <div><strong>Price:</strong></div><div>${details.price}</div>
-                <div><strong>Date:</strong></div><div>${details.date}</div>
-                <div><strong>Status:</strong></div><div><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">${details.status}</span></div>
-            </div>
-        `;
-        
-        document.getElementById('transactionDetails').innerHTML = detailsHtml;
-        document.getElementById('transactionModal').classList.remove('hidden');
-    }
-    
-    function closeModal() {
-        document.getElementById('transactionModal').classList.add('hidden');
-    }
-    
-    function generateReport() {
-        alert('Generating system report... This feature will download a comprehensive report of all transactions and system statistics.');
-    }
-    
-    function systemHealth() {
-        alert('System Health Check:\n\n✅ Blockchain Network: Healthy\n✅ Database: Connected\n✅ Smart Contracts: Operational\n✅ Security: All systems secure\n\nLast Check: ' + new Date().toLocaleString());
-    }
-</script>
 {% endblock %}

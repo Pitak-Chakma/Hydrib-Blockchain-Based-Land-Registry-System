@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up - Blockchain Land Management{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="login-container card border-0 shadow-lg overflow-hidden">
+                <div class="row g-0">
+                    <!-- Left side - Illustration/Info -->
+                    <div class="col-md-5 d-none d-md-block login-bg-container">
+                        <div class="login-bg h-100 d-flex flex-column justify-content-center p-4 text-white">
+                            <div class="blockchain-visual-login">
+                                <div class="node"></div>
+                                <div class="node"></div>
+                                <div class="node"></div>
+                            </div>
+                            <h2 class="mt-4 mb-3">Join Our Platform</h2>
+                            <p class="lead">Create your account to access blockchain-powered land management</p>
+                            <div class="mt-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="bi bi-check-circle me-3 fs-4"></i>
+                                    <span>Secure property transactions</span>
+                                </div>
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="bi bi-shield-lock me-3 fs-4"></i>
+                                    <span>Verified ownership records</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-arrow-repeat me-3 fs-4"></i>
+                                    <span>Transparent transaction history</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right side - Signup Form -->
+                    <div class="col-md-7">
+                        <div class="card-body p-4 p-lg-5">
+                            <div class="text-center mb-4">
+                                <i class="bi bi-person-plus-fill fs-1 text-primary"></i>
+                                <h2 class="mt-3 mb-1">Create Your Account</h2>
+                                <p class="text-muted">Fill in your details to get started</p>
+                            </div>
+                            
+                            <form method="POST" action="{{ url_for('signup') }}" class="login-form">
+                                <div class="mb-4">
+                                    <label for="username" class="form-label">Username</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                        <input type="text" class="form-control form-control-lg" id="username" name="username" placeholder="Choose a username" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="password" class="form-label">Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                        <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="Create a strong password" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="role" class="form-label">Select Your Role</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+                                        <select class="form-select form-select-lg" id="role" name="role" required>
+                                            <option value="" selected disabled>Choose your role</option>
+                                            <option value="admin">Admin</option>
+                                            <option value="government">Government Official</option>
+                                            <option value="seller">Seller (Land Owner)</option>
+                                            <option value="buyer">Buyer</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert alert-info d-flex align-items-center" id="role-info" style="display: none;">
+                                    <i class="bi bi-info-circle-fill me-3 fs-4"></i>
+                                    <p class="mb-0"><strong>Note:</strong> Seller and Buyer accounts require admin approval before they can use the system.</p>
+                                </div>
+                                
+                                <div class="d-grid gap-2 mt-5">
+                                    <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-person-check me-2"></i>Create Account</button>
+                                </div>
+                            </form>
+                            
+                            <div class="text-center mt-4">
+                                <p class="mb-0">Already have an account? <a href="{{ url_for('login') }}" class="text-primary fw-bold">Login</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
